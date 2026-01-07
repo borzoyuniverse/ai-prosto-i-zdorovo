@@ -1,0 +1,52 @@
+---
+description: |
+  Проектные правила. Всегда читать AGENTS.md. Работать по режимам и шагам строго.
+  Нельзя менять пороги/структуру, создавать новые документы без ADR, снимать моки вне implement.
+  Любое сообщение со словами "изменить/поправить/редирект/кнопка/валидация/сообщение/поведение"
+  трактуется как Change Request (CR) и маршрутизируется в mode=design-first для текущего или указанного FP.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+## Modes routing (FP=<id> mode=<stage>)
+- discovery: читать REQUIREMENTS.md, API.yaml, MODEL.sql, UX_MAP.md, TESTS.md; писать только QNA_DECISIONS.md, UX_MAP.md, WORKPLAN.yaml; Run/Edit кода — запрещено.
+- plan: читать WORKPLAN.yaml и UX_MAP.md; писать только WORKPLAN.yaml (+ ссылки в UX_MAP.md); Run/Edit — запрещено.
+- design-first: читать MODEL.sql, API.yaml, UX_MAP.md; писать QNA_DECISIONS.md (Question/GAP→ADR), UX_MAP.md, WORKPLAN.yaml; Run/Edit кода — запрещено.
+- tests-red:
+  - Phase SPEC (WORKPLAN.yaml tests_phase != code):
+    * Разрешено: править только docs/TESTS.md и docs/WORKPLAN.yaml.
+    * Запрещено: писать любой тестовый/продукционный код; запускать можно только существующие тесты для справки.
+    * Требование: получить и записать ACK на спецификацию (UAT/BDD + RTM + Planned Test Files).
+  - Phase CODE (после ACK на SPEC, WORKPLAN.yaml tests_phase = spec):
+    * Разрешено: создавать/менять **только** тестовые файлы из секции "Planned Test Files" в docs/TESTS.md.
+    * Разрешено: запускать тесты, сохранять артефакты в artifacts/<FP>/<date>/logs/*.
+    * Запрещено: править реализационный код.
+  - Переход в implement:
+    * Блокировать, пока не выполнен tests_red_ready (см. AGENTS.md) и в WORKPLAN.yaml не стоит tests_phase=code.
+
+- implement: bootstrap из TESTS.md (RTM), UAT/BDD, UX_MAP.md (CTA→Endpoint→State→Page→mock_status), затем API.yaml, MODEL.sql; править только front/src/** (требуемые pages/CTA), back/src/** (требуемые endpoints), UX_MAP.md; артефакты — в artifacts/<FP>/<date>/.
+- tests-green: запуск тестов, проверка порогов, сохранение coverage и logs; писать только WORKPLAN.yaml (рефлексия) и артефакты.
+- gate: использовать Acceptance/RTM из TESTS.md; проверять ADR/QNA_DECISIONS.md; собирать evidence/links.md; статус менять только при выполненных Gate и наличии ACK.
+
+## Evidence & ACK
+- Любой апдейт статуса в WORKPLAN.yaml требует артефактов (logs, coverage json-summary, demo-notes, links.md).
+- На стадиях из workflow.stakeholder_ack — обязателен ACK стейкхолдера; при отсутствии — отклонять и указать недостающее.
+
+## Prohibitions
+- Не изменять AGENTS.md, coverage thresholds, workflow.
+- Не создавать новые документы/папки, кроме артефактов; любая необходимость — через ADR в QNA_DECISIONS.md.
+- Не убирать моки со страниц вне implement и вне списка CTA/Pages FP в UX_MAP.md.
+- Web/MCP — выключены.
+
+## CR Auto-routing
+- Если пользовательское сообщение содержит ключевые слова:
+  ["изменить","поправить","редирект","кнопка","валидация","ошибка","сообщение","поведение","навигация","маршрут"],
+  и не указан явный mode → работать как `mode=design-first` (см. AGENTS.md / Change Requests).
+- В `design-first` по CR обязательно:
+  * QNA_DECISIONS.md: GAP→Answer→ADR,
+  * REQUIREMENTS.md: обновление FR/NFR,
+  * UX_MAP.md: обновление строки CTA/Page и диаграмм + добавление Impact Analysis,
+  * API.yaml/MODEL.sql: правка при необходимости,
+  * WORKPLAN.yaml: reflection + ACK.
+- Блокировать переход в implement, пока не выполнен `tests_red_ready` (двухфазно: SPEC→CODE с ACK) по затронутым кейсам.

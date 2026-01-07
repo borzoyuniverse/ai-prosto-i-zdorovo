@@ -1,0 +1,15 @@
+{
+  "name": "app-monorepo",
+  "private": true,
+  "workspaces": [
+    "front",
+    "back"
+  ],
+  "scripts": {
+    "bootstrap": "npm install && npm -w back install && npm -w front install",
+    "test": "npm -w back run test && npm -w front run test",
+    "lint": "npm -w back run lint && npm -w front run lint"
+  },
+  "devDependencies": {
+  }
+}

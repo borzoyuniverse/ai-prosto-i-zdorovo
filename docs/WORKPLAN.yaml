@@ -1,0 +1,36 @@
+# WORKPLAN — single source of truth for FP
+stage: discovery
+
+defaults:
+  coverage_thresholds:
+    back:  { lines: 0.60, functions: 0.50, branches: 0.45, statements: 0.60 }
+    front: { lines: 0.80, functions: 0.70, branches: 0.65, statements: 0.80 }
+
+feature_packs:
+  - id: FP000
+    title: Template Feature Pack
+    goal: <describe the goal>
+    priority: 1
+    status: discovery
+    scope:
+      ctas: [CTA-000]
+      pages:
+        - front/src/App.tsx
+      endpoints:
+        - GET /health
+    acceptance:
+      - FR-001; UAT-001; INT-001; UNIT-001
+    risks: []
+    blockers: []
+    spikes: []
+    tests_phase: null   # null | spec | code
+    artifacts:
+      required:
+        - test-logs
+        - coverage-json-summary
+        - demo-notes
+        - links.md
+    ack: null
+    reflection: null
+    gate_decision: null
+    gate_return_mode: null
