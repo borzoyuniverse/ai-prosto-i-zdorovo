@@ -43,9 +43,9 @@
    - Раздел **Strategy** (уровни тестов и пороги coverage).
    - Остальное (UAT/BDD, RTM, Planned Test Files) заполняет агент **tests‑red**.
 
-4) **Создать кастомных агентов в Cursor:**
-   - Для каждого этапа создайте отдельного агента (минимум: discovery, design-first, tests-red, implement, tests-green, gate).
-   - Системный промпт берите из `prompts.md` (его **не нужно** отправлять в чат).
+4) **Подготовить роли для Codex:**
+   - В `roles/` лежат инструкции для каждого режима (discovery, design-first, tests-red, implement, tests-green, gate).
+   - В чате достаточно писать `FP=... mode=...` — роли заменяют системные промпты.
 
 5) **Проверить локальный запуск:**
    - Команды запуска и тестов — в `RUNBOOK.md`.
@@ -61,8 +61,8 @@
 ├─ RUNBOOK.md                    # Запуск и тесты локально
 ├─ docker-compose.yml            # Локальный PostgreSQL
 ├─ env.example                   # Шаблон переменных окружения
-├─ prompts.md                    # Готовые промпты режимов
 ├─ package.json                  # Монорепо (front/back workspaces)
+├─ roles/                        # Роли (инструкции для режимов в Codex)
 ├─ docs/                         # Все процессные документы
 ├─ front/                        # React (минимальный каркас)
 ├─ back/                         # NestJS (минимальный каркас)
@@ -99,12 +99,12 @@ docs/
 
 ### Где правила
 - `AGENTS.md` — полный workflow, гейты, разрешённые правки по этапам.
-- `.cursor/rules/apprules.mdc` — автоматические правила Cursor.
+- `roles/README.md` — как работать в Codex.
 
 ### Как использовать агента
-1) Выбираете **нужного агента** для этапа (discovery, design-first, tests-red, implement, tests-green, gate).
-2) В чат **пишете только** `FP=FP001` (или другой FP, как в `WORKPLAN.yaml`). Указывать mode не нужно — его задаёт выбранный агент.
-3) Агент действует строго по своим инструкциям.
+1) В чат пишете `FP=FP001 mode=discovery` (или другой FP и режим).
+2) Агент открывает `roles/<mode>.md` и `AGENTS.md`, затем действует по инструкциям.
+3) Для следующего этапа пишете новое сообщение с другим `mode`.
 
 ### Как происходит переход между этапами
 1) **Discovery‑агент** фиксирует вопросы и просит стейкхолдера ответить.
@@ -112,7 +112,7 @@ docs/
 3) Стейкхолдер пишет в чат: `Ответил на вопросы` — это сигнал агенту перечитать файл.
 4) Агент фиксирует решения как ADR и запрашивает **ACK**.
 5) Пользователь пишет в чат: `ack` — агент записывает ACK в `docs/WORKPLAN.yaml`.
-6) Пользователь **переключает агента на следующий этап** и снова пишет `FP=...`.
+6) Пользователь пишет новое сообщение с нужным `mode=...`.
 
 Так повторяется на каждом этапе, до gate.
 
@@ -126,13 +126,12 @@ docs/
 - Заполните `docs/TESTS.md`: раздел Strategy и пороги coverage.
 - Создайте **все FP** в `docs/WORKPLAN.yaml`.
 
-### Шаг 2 — Создать агентов
-- Создайте агентов в Cursor для всех этапов (discovery → gate).
-- Вставьте соответствующие системные промпты из `prompts.md`.
+### Шаг 2 — Подготовить роли
+- Проверьте, что файлы в `roles/` соответствуют вашим процессам.
+- В работе используйте только `FP=... mode=...` (без длинных промптов в чат).
 
 ### Шаг 3 — Discovery
-- Выберите агента **discovery**.
-- Введите `FP=FP001` (или другой FP из `WORKPLAN.yaml`).
+- Введите `FP=FP001 mode=discovery` (или другой FP из `WORKPLAN.yaml`).
 - Агент проверит полноту информации, зафиксирует вопросы и обновит `WORKPLAN.yaml`.
 
 ### Шаг 4 — Ответить на вопросы и получить ACK
@@ -142,31 +141,26 @@ docs/
 - Напишите `ack` — агент зафиксирует его в `WORKPLAN.yaml`.
 
 ### Шаг 5 — Design-first
-- Переключите агента на **design-first**.
-- Напишите `FP=...`.
+- Напишите `FP=... mode=design-first`.
 - Агент синхронизирует `API.yaml`/`MODEL.sql`, заполнит `UX_MAP.md`, добавит диаграммы и запросит ACK.
 - Напишите `ack`.
 
 ### Шаг 6 — Tests-red (SPEC → CODE)
-- Переключите агента на **tests-red**.
-- Напишите `FP=...`.
+- Напишите `FP=... mode=tests-red`.
 - Агент заполнит спецификацию тестов в `TESTS.md` и запросит ACK.
 - Напишите `ack`.
 - Агент напишет тест‑код, прогонит красные тесты и сохранит логи.
 
 ### Шаг 7 — Implement
-- Переключите агента на **implement**.
-- Напишите `FP=...`.
+- Напишите `FP=... mode=implement`.
 - Агент реализует код строго по scope FP, снимет моки по `UX_MAP.md`.
 
 ### Шаг 8 — Tests-green
-- Переключите агента на **tests-green**.
-- Напишите `FP=...`.
+- Напишите `FP=... mode=tests-green`.
 - Агент прогонит тесты, проверит coverage и сохранит артефакты.
 
 ### Шаг 9 — Gate
-- Переключите агента на **gate**.
-- Напишите `FP=...`.
+- Напишите `FP=... mode=gate`.
 - Агент проверит acceptance/RTM/ADR/артефакты и запросит ACK.
 - Напишите `ack`. Агент зафиксирует PASS/REJECT в `WORKPLAN.yaml`.
 
@@ -193,30 +187,30 @@ artifacts/<FP>/<YYYY-MM-DD>/
 
 ## Пример диалога (упрощённо)
 
-Пользователь: `FP=FP001`  
+Пользователь: `FP=FP001 mode=discovery`  
 Агент (discovery): Прочитал REQUIREMENTS/API/MODEL/UX_MAP/TESTS/QNA/WORKPLAN. Добавил вопросы в `docs/QNA_DECISIONS.md` (Open Questions). Обновил `docs/UX_MAP.md` (заметки по CTA и соответствия). В `docs/WORKPLAN.yaml` у FP001 выставил `stage: discovery`, добавил `blockers`, заполнил `reflection`, оставил `ack.by/ack.at/ack.scope` пустыми. Нужны ответы в `QNA_DECISIONS.md` и ACK для перехода дальше.  
 Пользователь: Ответил на вопросы.  
 Агент (discovery): Прочитал `Answers`, закрыл вопросы и добавил ADR в `docs/QNA_DECISIONS.md`. Уточнил `docs/UX_MAP.md` по CTA. В `docs/WORKPLAN.yaml` у FP001 обновил `blockers` (снял решённые), обновил `reflection`, попросил ACK.  
 Пользователь: ack  
 Агент (discovery): ACK записан в `docs/WORKPLAN.yaml` для FP001.
 
-Пользователь переключает агента на design-first и пишет: `FP=FP001`  
+Пользователь пишет: `FP=FP001 mode=design-first`  
 Агент (design-first): Сверил `docs/API.yaml` и `docs/MODEL.sql`, расхождений нет. В `docs/UX_MAP.md` для FP001 заполнил `Page/Endpoint(s)/State keys/Mock Status` по всем CTA, добавил диаграммы `System Design (per CTA)` и `System Interaction Overview (FP)`. В `docs/WORKPLAN.yaml` для FP001 выставил `status: design-first`, обновил `reflection`, запросил ACK.  
 Пользователь: ack  
 Агент (design-first): ACK записан в `docs/WORKPLAN.yaml` для FP001.
 
-Пользователь переключает агента на tests-red и пишет: `FP=FP001`  
+Пользователь пишет: `FP=FP001 mode=tests-red`  
 Агент (tests-red): В `docs/TESTS.md` для FP001 добавил UAT/BDD, RTM и Planned Test Files. В `docs/WORKPLAN.yaml` выставил `status: tests-red`, `tests_phase: spec`, обновил `reflection`, запросил ACK.  
 Пользователь: ack  
 Агент (tests-red): Написал тест‑код по Planned Test Files, прогнал тесты (ожидаемо красные), сохранил логи в `artifacts/<FP>/<date>/logs/`. В `docs/WORKPLAN.yaml` обновил `tests_phase: code` и `reflection`.
 
-Пользователь переключает агента на implement и пишет: `FP=FP001`  
+Пользователь пишет: `FP=FP001 mode=implement`  
 Агент (implement): Реализовал функционал по scope FP, снял моки только по CTA из `docs/UX_MAP.md`. При необходимости обновил `docs/UX_MAP.md`. Прогнал тесты и сохранил coverage/logs в `artifacts/<FP>/<date>/`. В `docs/WORKPLAN.yaml` обновил `reflection`.
 
-Пользователь переключает агента на tests-green и пишет: `FP=FP001`  
+Пользователь пишет: `FP=FP001 mode=tests-green`  
 Агент (tests-green): Прогнал тесты, проверил пороги coverage, сохранил `coverage/*.json` и логи, добавил `evidence/demo-notes.txt`. В `docs/WORKPLAN.yaml` обновил `reflection`.
 
-Пользователь переключает агента на gate и пишет: `FP=FP001`  
+Пользователь пишет: `FP=FP001 mode=gate`  
 Агент (gate): Проверил Acceptance Checklist, RTM=100%, ADR/вопросы закрыты, артефакты на месте. Создал `artifacts/<FP>/<date>/evidence/links.md`. В `docs/WORKPLAN.yaml` выставил `gate_decision` и запросил ACK.  
 Пользователь: ack  
 Агент (gate): ACK записан, итоговая приёмка зафиксирована в `docs/WORKPLAN.yaml`.
