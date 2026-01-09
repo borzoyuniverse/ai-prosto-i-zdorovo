@@ -41,8 +41,10 @@ const proxies: Record<string, Record<string, string | ProxyOptions>> = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  const proxyEnv = process.env
+    .VITE_PROXY_SERVER as keyof typeof proxies | undefined;
   const proxyKey =
-    (process.env.VITE_PROXY_SERVER as keyof typeof proxies | undefined) ?? 'local';
+    proxyEnv && proxyEnv in proxies ? proxyEnv : ('local' as keyof typeof proxies);
   const plugins = [
     react(),
     svgr(),
