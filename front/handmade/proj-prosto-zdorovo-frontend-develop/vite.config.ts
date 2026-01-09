@@ -14,11 +14,8 @@ import svgr from 'vite-plugin-svgr';
 const proxies: Record<string, Record<string, string | ProxyOptions>> = {
   local: {
     '/api': {
-      target: 'http://localhost/api',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
-      rewrite: (path: string) => {
-        return path.replace(/^\/api/, '');
-      },
     },
   },
   test: {
@@ -44,6 +41,8 @@ const proxies: Record<string, Record<string, string | ProxyOptions>> = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  const proxyKey =
+    (process.env.VITE_PROXY_SERVER as keyof typeof proxies | undefined) ?? 'local';
   const plugins = [
     react(),
     svgr(),
@@ -90,7 +89,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      proxy: proxies[process.env.VITE_PROXY_SERVER as keyof typeof proxies],
+      proxy: proxies[proxyKey],
     },
   };
 });
