@@ -10,7 +10,7 @@
     "api": "pnpm api:download && pnpm api:generate",
     "dev": "vite --host",
     "dev:mock": "vite --host --mode mock",
-    "dev:mock:ws": "tsx src/testing/mocks/socket/index.ts",
+    "dev:mock:ws": "node mock-stomp-server/broker.js",
     "dev:test": "VITE_PROXY_SERVER=test vite --host --mode test",
     "build": "vite build --mode test",
     "build:test": "tsc -b | npx loose-ts-check && vite build --mode test",

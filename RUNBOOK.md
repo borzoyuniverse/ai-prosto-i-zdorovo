@@ -1,5 +1,6 @@
 # RUNBOOK — как запускать и проверять
 
+
 ## Требования
 - Node.js 20.x, PNPM/NPM
 - Docker + Postgres (локально)
@@ -26,4 +27,12 @@ npm -w front run dev
 npm -w back run test
 npm -w back run test:e2e
 npm -w front run test
+```
+
+## Мок WebSocket
+
+```bash
+# Запуск мокового STOMP-брокера для чата
+cd front/handmade/proj-prosto-zdorovo-frontend-develop
+pnpm run dev:mock:ws
 ```
