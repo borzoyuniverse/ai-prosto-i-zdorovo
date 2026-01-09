@@ -1,7 +1,7 @@
-﻿# WORKPLAN - single source of truth for FP
+﻿﻿# WORKPLAN - single source of truth for FP
 # ID format: FP###, unique and sequential across this file.
 # Tech: backend uses Spring Boot + Kotlin (see docs/REQUIREMENTS.md, docs/QNA_DECISIONS.md)
-stage: tests-red
+stage: tests-green
 
 defaults:
   coverage_thresholds:
@@ -13,7 +13,7 @@ feature_packs:
     title: Client MVP [MVP]
     goal: Client registration, booking flow, questionnaires, recommendations, notifications.
     priority: 1
-    status: tests-red
+    status: tests-green
     scope:
       ctas: [CTA-003, CTA-004, CTA-005, CTA-006, CTA-008, CTA-019, CTA-020]
       pages:
@@ -36,8 +36,10 @@ feature_packs:
         - RPC get-form-template
         - RPC form-submission
         - RPC get-recommendations
+        - RPC recommendations-specialist
         - RPC get-profile
         - RPC get-chats
+        - RPC get-messages
     acceptance:
       - FR-003; FR-004; FR-005; FR-006; FR-008; FR-026
     risks: []
@@ -53,8 +55,8 @@ feature_packs:
     ack:
       by: "Stakeholder"
       at: "2026-01-08T18:10:00+03:00"
-      scope: "FP001:tests-red:spec"
-    reflection: "????? FP001 ????????. Back e2e: 404 Not Found ?? RPC ?????????? (????????). Front vitest: 2 ??????? (MainPage ?? ???????? get-recommendations; ChatWithCurator ?? ???????? get-chats). ????: artifacts/FP001/2026-01-08/logs/back-tests.log, artifacts/FP001/2026-01-08/logs/front-tests.log."
+      scope: "FP001:tests-red:spec:CR-2026-01-08"
+    reflection: "tests-green: back e2e и front vitest зелёные; coverage json-summary сохранены. Артефакты: artifacts/FP001/2026-01-09/coverage/coverage-back.json, artifacts/FP001/2026-01-09/coverage/coverage-front.json; логи: artifacts/FP001/2026-01-09/logs/back-tests.log, artifacts/FP001/2026-01-09/logs/front-tests.log."
     gate_decision: null
     gate_return_mode: null
 

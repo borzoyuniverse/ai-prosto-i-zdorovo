@@ -24,8 +24,10 @@ paths:
           - get-form-template
           - form-submission
           - get-recommendations
+          - recommendations-specialist
           - get-profile
           - get-chats
+          - get-messages
       parameters:
         - in: query
           name: method
@@ -522,6 +524,10 @@ components:
         newAppointmentStatus:
           type: string
 
+    SpecialistType:
+      type: string
+      enum: [MASTER_TRAINER, NUTRITIONIST, MASTER_COACH, RELAXOLOGIST, SLEEP_EXPERT]
+
     SpecialistAvailableRequest:
       type: object
       properties:
@@ -721,6 +727,18 @@ components:
           items:
             $ref: "#/components/schemas/RecommendationRpc"
 
+    RecommendationsSpecialistRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+      required: [userId]
+
+    RecommendationsSpecialistResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/SpecialistType"
+
     RecommendationRpc:
       type: object
       properties:
@@ -812,6 +830,21 @@ components:
           items:
             $ref: "#/components/schemas/ChatSummary"
 
+    GetMessagesRequest:
+      type: object
+      properties:
+        chatId:
+          type: string
+      required: [chatId]
+
+    GetMessagesResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/MessageRpc"
+
     ChatSummary:
       type: object
       properties:
@@ -822,6 +855,21 @@ components:
         unreadCount:
           type: integer
         lastMessageDate:
+          type: string
+          format: date-time
+
+    MessageRpc:
+      type: object
+      properties:
+        id:
+          type: string
+        chatId:
+          type: string
+        senderId:
+          type: string
+        text:
+          type: string
+        createdAt:
           type: string
           format: date-time
 

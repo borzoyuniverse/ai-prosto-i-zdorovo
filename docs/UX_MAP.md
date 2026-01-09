@@ -7,10 +7,10 @@
 | CTA_ID | Page (React) | Route | Mock Status (mock/mixed/real/unknown) | Endpoint(s) (method path) | State keys | Notes |
 |---|---|---|---|---|---|---|
 | CTA-003 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/main-page/main-page.tsx | / | mock | RPC get-appointments; RPC get-recommendations | client.appointments, recommendations.last | MVP: Main page (appointments list + last recommendation) |
-| CTA-004 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx | /chat-with-curator | mock | RPC get-chats | chats.list | MVP: Client chat with curator only |
+| CTA-004 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx | /chat-with-curator | mock | RPC get-chats; RPC get-messages | chats.list; chats.messages | MVP: Client chat with curator only |
 | CTA-005 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-select/consultation-select.tsx | /specialists/consultation-select | mock | RPC get-appointment-types | appointments.select | MVP: Start booking (consultation type selection) |
 | CTA-006 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/filling-questionnaire/filling-questionnaire.tsx | /filling-questionnaire | mock | RPC search-form; RPC get-form-template; RPC form-submission | questionnaires.submit | MVP: Post-booking questionnaire |
-| CTA-008 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx | /client-recommendations | mock | RPC get-recommendations | recommendations.list | MVP: Client recommendations page |
+| CTA-008 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx | /client-recommendations | mock | RPC get-recommendations; RPC recommendations-specialist | recommendations.list; recommendations.filters | MVP: Client recommendations page |
 | CTA-019 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/profile/profile.tsx | /profile | mock | RPC get-profile | clients.profile | MVP: Client profile page; view-only (FR-026) |
 | CTA-020 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-appointment/consultation-appointment.tsx | /specialists/$consultationTypeId/consultation-appointment | mock | RPC specialist-available; RPC get-goals; RPC free-slots; RPC create-appointment; RPC confirm-appointment | appointments.create | MVP: Confirm appointment (slot + confirmation steps) |
 
@@ -43,10 +43,10 @@
 | CTA_ID | Page | Endpoint(s) | Assigned FP |
 |---|---|---|---|
 | CTA-003 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/main-page/main-page.tsx | RPC get-appointments; RPC get-recommendations | FP001 |
-| CTA-004 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx | RPC get-chats | FP001 |
+| CTA-004 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx | RPC get-chats; RPC get-messages | FP001 |
 | CTA-005 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-select/consultation-select.tsx | RPC get-appointment-types | FP001 |
 | CTA-006 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/filling-questionnaire/filling-questionnaire.tsx | RPC search-form; RPC get-form-template; RPC form-submission | FP001 |
-| CTA-008 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx | RPC get-recommendations | FP001 |
+| CTA-008 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx | RPC get-recommendations; RPC recommendations-specialist | FP001 |
 | CTA-019 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/profile/profile.tsx | RPC get-profile | FP001 |
 | CTA-020 | front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-appointment/consultation-appointment.tsx | RPC specialist-available; RPC get-goals; RPC free-slots; RPC create-appointment; RPC confirm-appointment | FP001 |
 
@@ -121,6 +121,15 @@ sequenceDiagram
   C-->>S: return {chats}
   S-->>P: update state
   P-->>U: render chat list
+  U->>P: Select chat
+  P->>S: dispatch(loadMessages)
+  S->>C: POST /api/webhook/json-rpc/?method=get-messages {chatId}
+  C->>SV: validate & call
+  SV->>R: query messages
+  SV-->>C: result {messages}
+  C-->>S: return {messages}
+  S-->>P: update state
+  P-->>U: render messages
 ```
 
 #### CTA-005: Consultation type selection
@@ -196,6 +205,13 @@ sequenceDiagram
   participant R as Repo(RecommendationsRepo)
 
   U->>P: Open "/client-recommendations"
+  P->>S: dispatch(loadSpecialistTypes)
+  S->>C: POST /api/webhook/json-rpc/?method=recommendations-specialist {userId}
+  C->>SV: validate & call
+  SV->>R: query specialist types
+  SV-->>C: result {types}
+  C-->>S: return {types}
+  S-->>P: update filters
   P->>S: dispatch(loadRecommendations)
   S->>C: POST /api/webhook/json-rpc/?method=get-recommendations {specialistTypes}
   C->>SV: validate & call
@@ -301,3 +317,10 @@ flowchart LR
   PC --> ST --> RPC --> CTRL --> SVC --> REPO --> DB
   SVC --> EXT
 ```
+
+## Impact Analysis (CR)
+
+| Change ID | CTA_ID | Files.front | Files.back | Tests.toCreateOrUpdate |
+|---|---|---|---|---|
+| CR-20260108-01 | CTA-004 | ["front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx","front/handmade/proj-prosto-zdorovo-frontend-develop/src/api/rpc-request/chat/use-get-messages-by-chatid.ts","front/handmade/proj-prosto-zdorovo-frontend-develop/src/feature/chat/message-list/messages-list.tsx"] | ["back/src/jsonrpc.controller.ts","back/src/jsonrpc.service.ts"] | ["front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-chat-with-curator.test.tsx","back/test/fp001-chats.e2e-spec.ts"] |
+| CR-20260108-01 | CTA-008 | ["front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx","front/handmade/proj-prosto-zdorovo-frontend-develop/src/api/rpc-request/recommendation/use-get-recommendations-specialist.ts","front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/components/filters-carousel.tsx"] | ["back/src/jsonrpc.controller.ts","back/src/jsonrpc.service.ts"] | ["front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-client-recommendations.test.tsx","back/test/fp001-recommendations.e2e-spec.ts"] |

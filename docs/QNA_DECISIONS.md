@@ -1,4 +1,4 @@
-﻿# QNA & DECISIONS
+# QNA & DECISIONS
 
 ## Open Questions / Gaps
 Нумерация:
@@ -30,6 +30,7 @@
 - [2026-01-08] [FP001-Q20] Q: Клиентские страницы при создании должны располагаться в front/handmade. Owner: Stakeholder. Status: closed
 - [2026-01-08] [FP001-Q21] Q: В API.yaml есть упоминание Google Calendar в /specialists/{specialistId}/schedule; подтвердить Yandex и убрать упоминания Google. Owner: Stakeholder. Status: closed
 - [2026-01-08] [FP001-Q22] Q: Уточнить FR-026 (CTA-019 /profile): какие данные профиля показываем, какие ограничения по доступу/редактированию в MVP? Owner: Stakeholder. Status: closed
+- [2026-01-08] [FP001-Q23] Q: Для FP001 нужно сохранить UX в прототипе: на страницах рекомендаций и чата используются RPC-методы recommendations-specialist (фильтры) и get-messages (сообщения). Подтверждаете ли добавление этих методов в контракт (API.yaml/UX_MAP) через CR и возврат в design-first? Также подтверждаете, что изменения требований будут фиксироваться через QNA/ADR (без прямой правки REQUIREMENTS.md вне extractor)? Owner: Stakeholder. Status: closed
 
 ## Answers
 Нумерация:
@@ -60,6 +61,7 @@
 - [2026-01-08] [FP001-A20] A: Клиентские страницы нужно создавать в front/handmade. By: Stakeholder. Status: closed
 - [2026-01-08] [FP001-A21] A: Провайдер календаря — Yandex; убрать упоминания Google из описаний API. By: Stakeholder. Status: closed
 - [2026-01-08] [FP001-A22] A: FR-026 (profile) = просмотр профиля клиента без редактирования. Показать: ФИО, email; телефон; дата рождения; страховая, номер полиса, срок действия; пакет консультаций (всего, использовано, осталось, validUntil). Доступ: только клиент к своему профилю. Дроуеры - просмотр, изменение не входит в MVP. By: Stakeholder. Status: closed
+- [2026-01-08] [FP001-A23] A: Добавляем RPC-методы recommendations-specialist и get-messages в API/UX_MAP через CR и возврат в design-first. Изменения требований фиксируем через QNA/ADR; прямые правки REQUIREMENTS.md не делаем. By: Stakeholder. Status: closed
 
 ## ADR (short form, inline)
 - ADR-2026-01-08-09 - FP001 ограничен MVP front/handmade (Accepted)
@@ -73,6 +75,11 @@
   - Consequences: Нужна чистка API-документации; поведение не меняется.
   - Links: docs/API.yaml, docs/QNA_DECISIONS.md
 - ADR-YYYY-MM-DD-01 - <title> (Proposed)
+- ADR-2026-01-08-13 - CR: RPC-методы для рекомендаций и чата (Accepted)
+  - Context: Нужно сохранить UX прототипа; страницы рекомендаций и чата опираются на RPC-методы recommendations-specialist и get-messages, которых нет в контракте.
+  - Decision: Вносим CR и добавляем методы recommendations-specialist и get-messages в API.yaml/UX_MAP; возвращаемся в design-first. Изменения требований фиксируем через QNA/ADR, без прямых правок REQUIREMENTS.md вне extractor.
+  - Consequences: Требуется обновление API/UX_MAP и повторная проверка design-first для FP001.
+  - Links: docs/API.yaml, docs/UX_MAP.md, docs/QNA_DECISIONS.md
 - ADR-2026-01-08-12 - Профиль: только просмотр в MVP (Accepted)
   - Context: Нужна фиксация требований по профилю клиента для CTA-019; UI уже отображает данные профиля.
   - Decision: Профиль — только просмотр. Показать: ФИО, email, телефон, дата рождения, страховая, номер полиса, срок действия, пакет консультаций (всего/использовано/осталось/validUntil). Изменение данных не входит в MVP.

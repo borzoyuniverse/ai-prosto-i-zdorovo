@@ -57,6 +57,18 @@
   - Expected (UI): Отображаются личные данные и пакет.
   - Expected (API): RPC get-profile.
 
+- UAT-008: ??????? ???????????? ??????????? ?? ????? ????????????
+  - Preconditions: ???????????? ???????????; ???? ??????? 2 ???? ????????????.
+  - Steps: ??????? "/client-recommendations".
+  - Expected (UI): ???????????? ?????? ? ?????? ???????????? ? "ALL".
+  - Expected (API): RPC recommendations-specialist.
+
+- UAT-009: ????????? ???? ? ????????? ??????????? ??? ???????? ????
+  - Preconditions: ???????????? ???????????; ???? ??? ? ????????? ? ?????????.
+  - Steps: ??????? "/chat-with-curator".
+  - Expected (UI): ????? ????????? ????????????.
+  - Expected (API): RPC get-messages.
+
 ## 3. System / Integration / Unit (summary)
 - Back: e2e JsonRpcController для RPC методов FP001; сервисы/репозитории для appointments, chats, recommendations, profile, questionnaire.
 - Front: интеграционные тесты страниц FP001 (рендер + обработка RPC ответов); unit тесты стор/хук-оберток RPC.
@@ -114,6 +126,18 @@ rtm:
         - "front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx"
       back:
         - "back/src"
+  - req: ADR-2026-01-08-13
+    tests:
+      uat: [UAT-008, UAT-009]
+      system: [INT-007, INT-008]
+      unit: [UNIT-007, UNIT-008]
+    code_targets:
+      front:
+        - "front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx"
+        - "front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx"
+        - "front/handmade/proj-prosto-zdorovo-frontend-develop/src/feature/chat/message-list/messages-list.tsx"
+      back:
+        - "back/src"
   - req: ADR-2026-01-08-12
     tests:
       uat: [UAT-007]
@@ -140,8 +164,10 @@ rtm:
   - back/test/fp001-appointments.e2e-spec.ts
   - back/test/fp001-questionnaire.e2e-spec.ts
   - back/test/fp001-recommendations.e2e-spec.ts
+  - back/test/fp001-recommendations-specialist.e2e-spec.ts
   - back/test/fp001-profile.e2e-spec.ts
   - back/test/fp001-chats.e2e-spec.ts
+  - back/test/fp001-messages.e2e-spec.ts
 - Front:
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-main-page.test.tsx
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-chat-with-curator.test.tsx
@@ -149,4 +175,6 @@ rtm:
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-consultation-appointment.test.tsx
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-filling-questionnaire.test.tsx
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-client-recommendations.test.tsx
+  - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-recommendations-filters.test.tsx
   - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-profile.test.tsx
+  - front/handmade/proj-prosto-zdorovo-frontend-develop/src/testing/fp001-chat-messages.test.tsx
