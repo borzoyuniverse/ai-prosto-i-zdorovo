@@ -138,7 +138,7 @@ rtm:
         - "front/handmade/proj-prosto-zdorovo-frontend-develop/src/feature/chat/message-list/messages-list.tsx"
       back:
         - "back/src"
-  - req: ADR-2026-01-08-12
+  - req: FR-026
     tests:
       uat: [UAT-007]
       system: [INT-006]
@@ -152,11 +152,11 @@ rtm:
 
 ## 5. Acceptance Checklist (per FP)
 
-* [ ] All relevant UAT scenarios are green
-* [ ] Coverage thresholds met
-* [ ] RTM covers requirements
-* [ ] UX_MAP.md updated (CTA/Endpoints/Pages/Mock)
-* [ ] QNA_DECISIONS.md has ADRs for critical decisions
+* [x] All relevant UAT scenarios are green
+* [x] Coverage thresholds met
+* [x] RTM covers requirements
+* [x] UX_MAP.md updated (CTA/Endpoints/Pages/Mock)
+* [x] QNA_DECISIONS.md has ADRs for critical decisions
 
 ## 6. Test Files Plan (FP001)
 - Back:

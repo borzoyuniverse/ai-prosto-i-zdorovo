@@ -1,7 +1,7 @@
 ﻿﻿# WORKPLAN - single source of truth for FP
 # ID format: FP###, unique and sequential across this file.
 # Tech: backend uses Spring Boot + Kotlin (see docs/REQUIREMENTS.md, docs/QNA_DECISIONS.md)
-stage: tests-green
+stage: released
 
 defaults:
   coverage_thresholds:
@@ -13,7 +13,7 @@ feature_packs:
     title: Client MVP [MVP]
     goal: Client registration, booking flow, questionnaires, recommendations, notifications.
     priority: 1
-    status: tests-green
+    status: released
     scope:
       ctas: [CTA-003, CTA-004, CTA-005, CTA-006, CTA-008, CTA-019, CTA-020]
       pages:
@@ -54,10 +54,10 @@ feature_packs:
         - links.md
     ack:
       by: "Stakeholder"
-      at: "2026-01-08T18:10:00+03:00"
-      scope: "FP001:tests-red:spec:CR-2026-01-08"
-    reflection: "tests-green: back e2e и front vitest зелёные; coverage json-summary сохранены, пороги пройдены. Артефакты: artifacts/FP001/2026-01-09_13-13-02/coverage/coverage-back.json, artifacts/FP001/2026-01-09_13-13-02/coverage/coverage-front.json; логи: artifacts/FP001/2026-01-09_13-13-02/logs/back-tests.log, artifacts/FP001/2026-01-09_13-13-02/logs/front-tests.log; demo-notes: artifacts/FP001/2026-01-09_13-13-02/evidence/demo-notes.txt."
-    gate_decision: null
+      at: "2026-01-09T13:38:35+06:00"
+      scope: "FP001:gate"
+    reflection: "gate: Acceptance checklist closed; RTM=100% for FP001; ADR confirmed; artifacts: artifacts/FP001/2026-01-09_13-13-02/coverage/coverage-back.json, artifacts/FP001/2026-01-09_13-13-02/coverage/coverage-front.json; logs: artifacts/FP001/2026-01-09_13-13-02/logs/back-tests.log, artifacts/FP001/2026-01-09_13-13-02/logs/front-tests.log; demo-notes: artifacts/FP001/2026-01-09_13-13-02/evidence/demo-notes.txt; links: artifacts/FP001/2026-01-09_13-13-02/evidence/links.md."
+    gate_decision: pass
     gate_return_mode: null
 
   - id: FP002
@@ -122,3 +122,6 @@ feature_packs:
     reflection: null
     gate_decision: null
     gate_return_mode: null
+
+
+
