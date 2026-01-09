@@ -1,0 +1,7 @@
+import { cn } from '@/lib/shadcn/lib/utils';
+
+function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn('animate-pulse bg-slate-300', className)} {...props} />;
+}
+
+export { Skeleton };

@@ -1,0 +1,186 @@
+{
+  "dates": {
+    "dayWithWeekdayAndTime": "{{date, dayWithWeekdayAndTime}}",
+    "fullDate": "{{date, fullDate}}",
+    "time": "{{date, time}}",
+    "dayOfFullMonth": "{{date, dayOfFullMonth}}",
+    "weekdayDateYear": "{{date, weekdayDateYear}}",
+    "shortDate": "{{date, shortDate}}"
+  },
+  "buttons": {
+    "continue": "Продолжить",
+    "make-an-appointment": "Записаться",
+    "confirm-appointment": "Подтвердить запись",
+    "save": "Сохранить"
+  },
+  "tab-bar": {
+    "CLIENT": {
+      "1": "Мои записи",
+      "2": "Чат",
+      "3": "Рекомендации",
+      "4": "Профиль"
+    },
+    "SPECIALIST": {},
+    "CURATOR": {}
+  },
+  "specialist-type-title": {
+    "MASTER_COACH": "Мастер-коуч",
+    "MASTER_TRAINER": "Мастер-тренер",
+    "NUTRITIONIST": "Нутрициолог",
+    "RELAXOLOGIST": "Релаксолог",
+    "SLEEP_EXPERT": "Эксперт по сну",
+    "ALL": "Все"
+  },
+  "client-consultation-page": {
+    "title": "Мои записи",
+    "button-consultation": "Записаться на консультацию",
+    "client-consultation": {
+      "isPrimary": {
+        "true": "Первичная консультация",
+        "false": "Повторная консультация"
+      },
+      "button": "Зайти на консультацию",
+      "alert": "Менее часа до начала",
+      "text-link": "Ссылка на консультацию появится за час до начала",
+      "questionnaires": {
+        "GENERAL": "Заполнить профиль здоровья",
+        "CONSULTATION_TYPE": "Заполнить анкету по направлению"
+      }
+    },
+    "empty": {
+      "title": "Наши специалисты ждут вас",
+      "description": "Запишитесь на консультацию в удобное время, мы всегда рады помочь"
+    }
+  },
+  "client-recommendations-page": {
+    "title": "Мои рекомендации",
+    "client-recommendations-list": {
+      "empty": {
+        "title": "Рекомендаций пока нет",
+        "description": "После консультаций специалисты будут писать для вас персональные советы — они будут появяться здесь"
+      }
+    },
+    "client-recommendation": {
+      "drawer-title": "Рекомендация"
+    }
+  },
+  "chat-with-curator": {
+    "title": "Ваш куратор"
+  },
+  "textarea-auto-size": {
+    "info-tip": {
+      "current-count": "Символов осталось: {{count}}",
+      "max-length": "Вы достигли максимальной длины текста"
+    }
+  },
+  "form-builder": {
+    "errors": {
+      "main": "Давайте ответим на всё — и вперёд!",
+      "question": "Нужен ваш ответ"
+    }
+  },
+  "filling-questionnaire-page": {
+    "form-footer": {
+      "buttons": {
+        "fill-later": "Заполню позже",
+        "save": "Сохранить"
+      }
+    }
+  },
+  "select-consultation-type-page": {
+    "title": "Выберите направление для записи на консультацию",
+    "groups": {
+      "DEFAULT": "Первичная консультация",
+      "REPEATED": "Повторная консультация",
+      "BLOCKED": "Требуется подтверждение куратора для записи"
+    },
+    "empty": {
+      "title": "Ваш пакет консультаций исчерпан",
+      "description": "Мы хотели бы помочь, но сейчас новые консультации недоступны. Вы можете уточнить о возможности продления в своей организации или в организации, где оформлено ДМС.",
+      "button": "Вернуться на главную"
+    }
+  },
+  "profile-page": {
+    "title": "Мой профиль",
+    "package-info": {
+      "remaining-consultations": "Осталось консультаций",
+      "my-package": "Мой пакет",
+      "package-description": "Пакет из {{total}} консультаций",
+      "valid-period": "Период действия",
+      "valid-until": "До {{date, shortDate}}",
+      "used": "Использовано",
+      "used-count": "{{used}} из {{total}}"
+    },
+    "personal-info-drawer": {
+      "menu-title": "Мои личные данные",
+      "title": "Мои личные данные",
+      "phone": "Телефон",
+      "email": "Эл.почта",
+      "birth-date": "Дата рождения"
+    },
+    "rules-drawer": {
+      "menu-title": "Общие правила пользования",
+      "title": "Общие правила пользования"
+    },
+    "insurance-policy-drawer": {
+      "menu-title": "Данные страхового полиса",
+      "title": "Данные страхового полиса",
+      "insurer": "Страховщик",
+      "number": "Номер полиса",
+      "status": "Статус полиса",
+      "status-active": "Активен до {{date, fullDate}}",
+      "new-policy-button": "Внести новый полис"
+    },
+    "change-insurance-number-drawer": {
+      "title": "Введите номер действующего страхового полиса",
+      "success-update": "Новый полис успешно внесён",
+      "placeholder": "Введите номер страхового полиса",
+      "error": {
+        "empty": "Пожалуйста, введите номер страхового полиса",
+        "server": "Не нашли такого полиса. Возможно, опечатка?"
+      }
+    }
+  },
+  "consultation-appointment-page": {
+    "title": "Запись на консультацию",
+    "choose-target-step": {
+      "title": "Выберите свою цель",
+      "goal-description-drawer": {
+        "title": "Описание цели"
+      }
+    },
+    "choose-slot-step": {
+      "select-date": "Выберите дату: <date>{{date, dayOfFullMonth}}</date>",
+      "consultation-slot-list": {
+        "select-time": "Выберите время: <time>{{time}}</time>",
+        "select-time-no-value": "Выберите время",
+        "empty": {
+          "title": "Может другой день?",
+          "description": "На эту дату не осталось свободных мест"
+        }
+      }
+    },
+    "confirm-appointment-step": {
+      "title": "Подтвердите запись на консультацию",
+      "description": "Убедитесь, что всё верно — и начнём путь к новым результатам",
+      "date": "Дата",
+      "time": "Время",
+      "goal": "Моя цель"
+    },
+    "consultation-type-card": {
+      "type": {
+        "DEFAULT": "Первичная консультация",
+        "REPEATED": "Повторная консультация"
+      }
+    },
+    "consultation-specialist-choice": {
+      "not-can-book": "Ваш предыдущий специалист больше не ведёт консультации. Запишитесь на удобное время — вас примет другой специалист.",
+      "switch-text": "Записаться к тому же специалисту"
+    },
+    "appointment-error-drawer": {
+      "title": "Не удалось записаться на это время",
+      "description": "Похоже, кто-то записался на это время чуть раньше и опередил вас. Пожалуйста, выберите другое доступное время.",
+      "button": "Выбрать другое время"
+    }
+  }
+}

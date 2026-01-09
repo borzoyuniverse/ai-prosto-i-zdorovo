@@ -1,0 +1,157 @@
+default:
+  image: docker:cli
+  interruptible: true
+  tags: [docker]
+
+stages:
+  # - generate-api
+  - lint
+  - test
+  - build
+  # - e2e
+  - deploy
+
+variables:
+  PROJECT_MAIN: proj-two-meter-guide/proj-two-meter-guide-main
+  GENERATED_FOLDER: src/api/generated/fetch-client
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# generate-api-env:
+#   stage: generate-api
+#   script:
+#     - echo "GITLAB_TOKEN=${GITLAB_TOKEN}" >> generate-api/.env
+#   artifacts:
+#     paths:
+#       - generate-api/.env
+
+# download-api-schema:
+#   image: node:20.17-alpine
+#   stage: generate-api
+#   needs: ['generate-api-env']
+#   script:
+#     - sh generate-api/download-api.sh
+#   artifacts:
+#     paths:
+#       - generate-api/schema.yaml
+#     when: always
+#     expire_in: 1 day
+
+# generate-api:
+#   image: openapitools/openapi-generator-cli:latest
+#   stage: generate-api
+#   needs: ['download-api-schema']
+#   script:
+#     - docker-entrypoint.sh generate --input-spec generate-api/schema.yaml -o $GENERATED_FOLDER -g "typescript-fetch" --additional-properties=fileNaming='kebab-case',supportsES6=true
+#   artifacts:
+#     paths:
+#       - src/api/generated/
+#     when: always
+#     expire_in: 1 day
+
+lint-front:
+  stage: lint
+  script:
+    - docker build --target lint .
+
+test-front:
+  stage: test
+  script:
+    - docker build --target test .
+
+build-front:
+  stage: build
+  variables:
+    IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  before_script:
+    - test "$CI_COMMIT_BRANCH" = "main" && export ENV=prod || export ENV=test
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --build-arg ENV=$ENV -t $IMAGE .
+    - docker push -q $IMAGE
+  needs: ['lint-front', 'test-front']
+
+# e2e-env:
+#   stage: e2e
+#   before_script:
+#     - export MAIN_REPO=`echo "$CI_REPOSITORY_URL" | sed "s|$CI_PROJECT_NAME|proj-two-meter-guide-main|"`
+#     - apk --no-cache add git
+#   script:
+#     - if git ls-remote --exit-code -h "$MAIN_REPO" $CI_COMMIT_REF_NAME; then
+#         echo "MAIN_BRANCH=$CI_COMMIT_REF_NAME" >> e2e.env;
+#       else
+#         echo "MAIN_BRANCH=develop" >> e2e.env;
+#       fi
+#   artifacts:
+#     reports:
+#       dotenv: e2e.env
+
+# e2e:
+#   stage: e2e
+#   needs: [e2e-env]
+#   variables:
+#     REVIEW_TAG: $CI_COMMIT_REF_SLUG
+#     TRIGGER_JOB: e2e
+#   trigger:
+#     project: $PROJECT_MAIN
+#     branch: $MAIN_BRANCH
+#     strategy: depend
+
+# deploy-review:
+#   stage: deploy
+#   variables:
+#     REVIEW_TAG: $CI_COMMIT_REF_SLUG
+#     TRIGGER_JOB: deploy-review
+#   trigger:
+#     project: $PROJECT_MAIN
+#     branch: $MAIN_BRANCH
+#     strategy: depend
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     on_stop: stop-review
+#     auto_stop_in: 1 week
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#       when: manual
+
+# stop-review:
+#   stage: deploy
+#   variables:
+#     REVIEW_TAG: $CI_COMMIT_REF_SLUG
+#     TRIGGER_JOB: stop-review
+#   trigger:
+#     project: $PROJECT_MAIN
+#     branch: $MAIN_BRANCH
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     action: stop
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#       when: manual
+
+deploy-staging:
+  stage: deploy
+  variables:
+    TRIGGER_JOB: deploy-staging
+  trigger:
+    project: $PROJECT_MAIN
+    branch: $CI_COMMIT_BRANCH
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      when: manual
+
+deploy-prod:
+  stage: deploy
+  variables:
+    TRIGGER_JOB: deploy-prod
+  trigger:
+    project: $PROJECT_MAIN
+    branch: $CI_COMMIT_BRANCH
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual

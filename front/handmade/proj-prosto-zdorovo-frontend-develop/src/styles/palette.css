@@ -1,0 +1,63 @@
+@layer base {
+  :root {
+    /* Neutral */
+    --neutral-0: #ffffff;
+    --neutral-100: #eaeaea;
+    --neutral-200: #d5d5d5;
+    --neutral-300: #bfbfbf;
+    --neutral-400: #aaaaaa;
+    --neutral-500: #959595;
+    --neutral-600: #808080;
+    --neutral-700: #6a6a6a;
+    --neutral-800: #555555;
+    --neutral-900: #404040;
+
+    /* Primary */
+    --primary-50: #f7f8f5;
+    --primary-100: #eff4e9;
+    --primary-200: #dfead2;
+    --primary-300: #cfdfbc;
+    --primary-400: #bfd5a6;
+    --primary-500: #afca90;
+    --primary-600: #9fc079;
+    --primary-700: #8fb563;
+    --primary-800: #77aa3c;
+    --primary-900: #689930;
+
+    /* Secondary */
+    --secondary-50: #fefcfa;
+    --secondary-100: #fbf7f2;
+    --secondary-200: #f9f3eb;
+    --secondary-300: #f7f1e7;
+    --secondary-400: #f6eee2;
+    --secondary-500: #f5ebdd;
+    --secondary-600: #f3e8d8;
+    --secondary-700: #e7d5ba;
+    --secondary-800: #cbb390;
+    --secondary-900: #ba9a6b;
+
+    /* Error */
+    --error-100: #faeaea;
+    --error-200: #f4d0d0;
+    --error-300: #eeb8b8;
+    --error-400: #e9a1a1;
+    --error-500: #e38989;
+    --error-600: #de7171;
+    --error-700: #d85a5a;
+    --error-800: #d34242;
+    --error-900: #c92f2f;
+
+    /* Effects */
+    --darkening-gradient: linear-gradient(
+      to bottom,
+      hsla(0, 0%, 6%, 0),
+      hsla(0, 0%, 6%, 0.6)
+    );
+    --black-50: rgba(24, 24, 27, 0.55);
+    --drop-shadow: 0px -4px 15px rgba(155, 161, 175, 0.1),
+      0px 4px 15px rgba(155, 161, 175, 0.1);
+
+    --shadow-down: 0px 4px 6px 0px rgba(238, 242, 232, 0.22);
+    --shadow-up: 0px -4px 6px 0px rgba(238, 242, 232, 0.22);
+  }
+}

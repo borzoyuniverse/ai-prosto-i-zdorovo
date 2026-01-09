@@ -1,0 +1,186 @@
+{
+  "dates": {
+    "dayWithWeekdayAndTime": "{{date, dayWithWeekdayAndTime}}",
+    "fullDate": "{{date, fullDate}}",
+    "time": "{{date, time}}",
+    "dayOfFullMonth": "{{date, dayOfFullMonth}}",
+    "weekdayDateYear": "{{date, weekdayDateYear}}",
+    "shortDate": "{{date, shortDate}}"
+  },
+  "buttons": {
+    "continue": "Continue",
+    "make-an-appointment": "Make an Appointment",
+    "confirm-appointment": "Confirm an Appointment",
+    "save": "Save"
+  },
+  "tab-bar": {
+    "CLIENT": {
+      "1": "My Appointments",
+      "2": "Chat",
+      "3": "Recommendations",
+      "4": "Profile"
+    },
+    "SPECIALIST": {},
+    "CURATOR": {}
+  },
+  "specialist-type-title": {
+    "MASTER_COACH": "Master Coach",
+    "MASTER_TRAINER": "Master Trainer",
+    "NUTRITIONIST": "Nutritionist",
+    "RELAXOLOGIST": "Relaxologist",
+    "SLEEP_EXPERT": "Sleep Expert",
+    "ALL": "All"
+  },
+  "client-consultation-page": {
+    "title": "My Appointments",
+    "button-consultation": "Book a Consultation",
+    "client-consultation": {
+      "isPrimary": {
+        "true": "Initial Consultation",
+        "false": "Follow-up Consultation"
+      },
+      "button": "Join Consultation",
+      "alert": "Less than an hour to start",
+      "text-link": "Consultation link will appear one hour before start",
+      "questionnaires": {
+        "GENERAL": "Fill Health Profile",
+        "CONSULTATION_TYPE": "Fill Direction Questionnaire"
+      }
+    },
+    "empty": {
+      "title": "Our specialists are waiting for you",
+      "description": "Book a consultation at a convenient time, we are always happy to help"
+    }
+  },
+  "client-recommendations-page": {
+    "title": "My Recommendations",
+    "client-recommendations-list": {
+      "empty": {
+        "title": "No recommendations yet",
+        "description": "After consultations, specialists will provide personalized advice for you — it will appear here"
+      }
+    },
+    "client-recommendation": {
+      "drawer-title": "Recommendation"
+    }
+  },
+  "chat-with-curator": {
+    "title": "Your Curator"
+  },
+  "textarea-auto-size": {
+    "info-tip": {
+      "current-count": "Characters remaining: {{count}}",
+      "max-length": "You have reached the maximum text length"
+    }
+  },
+  "form-builder": {
+    "errors": {
+      "main": "Let’s answer all the questions and move on!",
+      "question": "Your answer is required"
+    }
+  },
+  "filling-questionnaire-page": {
+    "form-footer": {
+      "buttons": {
+        "fill-later": "Fill later",
+        "save": "Save"
+      }
+    }
+  },
+  "select-consultation-type-page": {
+    "title": "Select a consultation type",
+    "groups": {
+      "DEFAULT": "Initial consultation",
+      "REPEATED": "Follow-up consultation",
+      "BLOCKED": "Coordinator approval required to book"
+    },
+    "empty": {
+      "title": "Your consultation package is exhausted",
+      "description": "We would like to help, but new consultations are currently unavailable. You can check with your organization or the organization where your private health insurance is registered about the possibility of extending your package.",
+      "button": "Return to home"
+    }
+  },
+  "profile-page": {
+    "title": "My Profile",
+    "package-info": {
+      "remaining-consultations": "Consultations Remaining",
+      "my-package": "My Package",
+      "package-description": "Package of {{total}} consultations",
+      "valid-period": "Valid Period",
+      "valid-until": "Until {{date, shortDate}}",
+      "used": "Used",
+      "used-count": "{{used}} of {{total}}"
+    },
+    "personal-info-drawer": {
+      "menu-title": "My Personal Information",
+      "title": "My Personal Information",
+      "phone": "Phone",
+      "email": "Email",
+      "birth-date": "Date of Birth"
+    },
+    "rules-drawer": {
+      "menu-title": "General Terms of Use",
+      "title": "General Terms of Use"
+    },
+    "insurance-policy-drawer": {
+      "menu-title": "Insurance Policy Details",
+      "title": "Insurance Policy Details",
+      "insurer": "Insurer",
+      "number": "Policy Number",
+      "status": "Policy Status",
+      "status-active": "Active until {{date, fullDate}}",
+      "new-policy-button": "Add a new policy"
+    },
+    "change-insurance-number-drawer": {
+      "title": "Enter a valid insurance policy number",
+      "success-update": "The new policy has been successfully saved",
+      "placeholder": "Enter the insurance policy number",
+      "error": {
+        "empty": "Please enter the insurance policy number",
+        "server": "We couldn’t find this policy. Please check the number and try again"
+      }
+    }
+  },
+  "consultation-appointment-page": {
+    "title": "Book a Consultation",
+    "choose-target-step": {
+      "title": "Choose Your Goal",
+      "goal-description-drawer": {
+        "title": "Goal Description"
+      }
+    },
+    "choose-slot-step": {
+      "select-date": "Select a date: <date>{{date, dayOfFullMonth}}</date>",
+      "consultation-slot-list": {
+        "select-time": "Select a time: <time>{{time}}</time>",
+        "select-time-no-value": "Select a time",
+        "empty": {
+          "title": "Maybe another day?",
+          "description": "No available slots for this date"
+        }
+      }
+    },
+    "confirm-appointment-step": {
+      "title": "Confirm your consultation appointment",
+      "description": "Make sure everything is correct — and let's start your path to new results",
+      "date": "Date",
+      "time": "Time",
+      "goal": "My goal"
+    },
+    "consultation-type-card": {
+      "type": {
+        "DEFAULT": "Initial Consultation",
+        "REPEATED": "Follow-up Consultation"
+      }
+    },
+    "consultation-specialist-choice": {
+      "not-can-book": "Your previous specialist no longer provides consultations. Please book a convenient time — another specialist will see you.",
+      "switch-text": "Book with the same specialist"
+    },
+    "appointment-error-drawer": {
+      "title": "Failed to book this time",
+      "description": "It looks like someone booked this time slot just before you. Please select another available time.",
+      "button": "Select another time"
+    }
+  }
+}
