@@ -14,6 +14,12 @@ vi.mock('@tanstack/react-router', () => ({
   Navigate: ({ to }: { to: string }) => <div data-testid="navigate" data-to={to} />,
   useNavigate: () => vi.fn(),
 }));
+vi.mock('@/lib/shadcn/components/ui/spinner/spinner', () => ({
+  Spinner: () => <div data-testid="spinner" />,
+}));
+vi.mock('@/feature/form-builder/form-builder', () => ({
+  FormBuilder: () => <div data-testid="form-builder" />,
+}));
 
 vi.mock('@/api/rpc-request/form/use-form-submission', () => ({
   useFormSubmission: vi.fn(),
@@ -52,5 +58,57 @@ describe('FillingQuestionnaire', () => {
     render(<FillingQuestionnaire />);
 
     expect(screen.getByTestId('navigate')).toHaveAttribute('data-to', '/');
+  });
+
+  it('renders spinner while loading', () => {
+    const useFormSubmissionMock = vi.mocked(useFormSubmission);
+    const useGetFormTemplateByIdMock = vi.mocked(useGetFormTemplateById);
+    const useSearchFormMock = vi.mocked(useSearchForm);
+
+    useFormSubmissionMock.mockReturnValue({ mutate: vi.fn() } as any);
+
+    useSearchFormMock.mockReturnValue({
+      data: { forms: [] },
+      isError: false,
+      error: null,
+      isPending: true,
+    } as any);
+
+    useGetFormTemplateByIdMock.mockReturnValue({
+      data: null,
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    render(<FillingQuestionnaire />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+  });
+
+  it('renders form builder when form is available', () => {
+    const useFormSubmissionMock = vi.mocked(useFormSubmission);
+    const useGetFormTemplateByIdMock = vi.mocked(useGetFormTemplateById);
+    const useSearchFormMock = vi.mocked(useSearchForm);
+
+    useFormSubmissionMock.mockReturnValue({ mutate: vi.fn() } as any);
+
+    useSearchFormMock.mockReturnValue({
+      data: { forms: [{ formId: 'form-1' }] },
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    useGetFormTemplateByIdMock.mockReturnValue({
+      data: { title: 'Form', fields: [] },
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    render(<FillingQuestionnaire />);
+
+    expect(screen.getByTestId('form-builder')).toBeInTheDocument();
   });
 });

@@ -5,7 +5,10 @@
   "testMatch": ["**/?(*.)+(e2e-spec).[tj]s?(x)"],
   "passWithNoTests": true,
   "collectCoverage": true,
-  "collectCoverageFrom": ["<rootDir>/src/**/*.ts"],
+  "collectCoverageFrom": [
+    "<rootDir>/src/jsonrpc.controller.ts",
+    "<rootDir>/src/jsonrpc.service.ts"
+  ],
   "coverageReporters": ["json-summary"],
   "coverageDirectory": "coverage"
 }

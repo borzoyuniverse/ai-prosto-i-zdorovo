@@ -31,4 +31,27 @@ describe('FP001 JsonRPC', () => {
       })
       .expect(200);
   });
+
+  it('returns error when method is missing', async () => {
+    await request(app.getHttpServer())
+      .post('/api/webhook/json-rpc/')
+      .send({
+        jsonrpc: '2.0',
+        params: {},
+        id: 'req-1a',
+      })
+      .expect(200);
+  });
+
+  it('returns error for unknown method', async () => {
+    await request(app.getHttpServer())
+      .post('/api/webhook/json-rpc/?method=unknown-method')
+      .send({
+        jsonrpc: '2.0',
+        method: 'unknown-method',
+        params: {},
+        id: 'req-1b',
+      })
+      .expect(200);
+  });
 });

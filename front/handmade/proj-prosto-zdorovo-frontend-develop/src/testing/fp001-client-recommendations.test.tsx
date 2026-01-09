@@ -52,4 +52,22 @@ describe('ClientRecommendations', () => {
 
     expect(screen.getByTestId('filters')).toHaveTextContent('3');
   });
+
+  it('hides filters when there is no filters data', () => {
+    const useGetRecommendationsSpecialistMock = vi.mocked(
+      useGetRecommendationsSpecialist,
+    );
+
+    useGetRecommendationsSpecialistMock.mockReturnValue({
+      data: undefined,
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    render(<ClientRecommendations />);
+
+    expect(screen.queryByTestId('filters')).toBeNull();
+    expect(screen.getByTestId('recommendations-list')).toBeInTheDocument();
+  });
 });

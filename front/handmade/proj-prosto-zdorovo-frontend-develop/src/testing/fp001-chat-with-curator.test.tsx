@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useGetChats } from '@/api/rpc-request/chat/use-get-chats';
@@ -12,6 +12,9 @@ vi.mock('@/components/base-layout/base-layout', () => ({
   BaseLayout: ({ children }: { children: ReactNode }) => (
     <div>{children}</div>
   ),
+}));
+vi.mock('@/lib/shadcn/components/ui/spinner/spinner', () => ({
+  Spinner: () => <div data-testid="spinner" />,
 }));
 
 
@@ -42,5 +45,21 @@ describe('ChatWithCurator', () => {
     render(<ChatWithCurator />);
 
     expect(useGetChatsMock).toHaveBeenCalled();
+  });
+
+  it('renders spinner while loading', () => {
+    const useGetChatsMock = vi.mocked(useGetChats);
+
+    useGetChatsMock.mockReturnValue({
+      data: { chats: [] },
+      isError: false,
+      error: null,
+      isPending: true,
+      fetchNextPage: vi.fn(),
+    } as any);
+
+    render(<ChatWithCurator />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

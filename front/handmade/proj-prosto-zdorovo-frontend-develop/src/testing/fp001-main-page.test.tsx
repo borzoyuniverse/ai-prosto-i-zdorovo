@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useGetAppointments } from '@/api/rpc-request/appointment/use-get-appointments';
@@ -13,6 +13,12 @@ vi.mock('@/components/base-layout/base-layout', () => ({
   BaseLayout: ({ children }: { children: ReactNode }) => (
     <div>{children}</div>
   ),
+}));
+vi.mock('@/components/app-image/app-image', () => ({
+  AppImage: () => <div data-testid="app-image" />,
+}));
+vi.mock('@/lib/shadcn/components/ui/spinner/spinner', () => ({
+  Spinner: () => <div data-testid="spinner" />,
 }));
 
 
@@ -72,5 +78,53 @@ describe('MainPage', () => {
     render(<MainPage />);
 
     expect(useGetRecommendationsMock).toHaveBeenCalled();
+  });
+
+  it('renders spinner while loading', () => {
+    const useGetAppointmentsMock = vi.mocked(useGetAppointments);
+    const useGetRecommendationsMock = vi.mocked(useGetRecommendations);
+
+    useGetAppointmentsMock.mockReturnValue({
+      data: [],
+      isError: false,
+      error: null,
+      isPending: true,
+    } as any);
+
+    useGetRecommendationsMock.mockReturnValue({
+      data: { recommendations: [] },
+      isError: false,
+      error: null,
+      isPending: false,
+      fetchNextPage: vi.fn(),
+    } as any);
+
+    render(<MainPage />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+  });
+
+  it('renders empty state when there are no appointments', () => {
+    const useGetAppointmentsMock = vi.mocked(useGetAppointments);
+    const useGetRecommendationsMock = vi.mocked(useGetRecommendations);
+
+    useGetAppointmentsMock.mockReturnValue({
+      data: [],
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    useGetRecommendationsMock.mockReturnValue({
+      data: { recommendations: [] },
+      isError: false,
+      error: null,
+      isPending: false,
+      fetchNextPage: vi.fn(),
+    } as any);
+
+    render(<MainPage />);
+
+    expect(screen.getByTestId('app-image')).toBeInTheDocument();
   });
 });

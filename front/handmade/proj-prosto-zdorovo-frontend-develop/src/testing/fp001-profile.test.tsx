@@ -13,6 +13,9 @@ vi.mock('@/components/base-layout/base-layout', () => ({
     <div>{children}</div>
   ),
 }));
+vi.mock('@/lib/shadcn/components/ui/spinner/spinner', () => ({
+  Spinner: () => <div data-testid="spinner" />,
+}));
 
 
 vi.mock('@/components/profile-user-info/profile-user-info', () => ({
@@ -77,5 +80,20 @@ describe('Profile', () => {
     expect(screen.getByTestId('profile-package')).toHaveTextContent('10');
     expect(screen.getByTestId('personal-info')).toBeInTheDocument();
     expect(screen.getByTestId('insurance-policy')).toBeInTheDocument();
+  });
+
+  it('renders spinner while loading', () => {
+    const useGetProfileMock = vi.mocked(useGetProfile);
+
+    useGetProfileMock.mockReturnValue({
+      data: null,
+      isError: false,
+      error: null,
+      isPending: true,
+    } as any);
+
+    render(<Profile />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

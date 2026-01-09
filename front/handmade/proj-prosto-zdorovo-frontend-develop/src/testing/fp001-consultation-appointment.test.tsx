@@ -8,8 +8,9 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+let consultationType = 'REPEATED';
 vi.mock('@tanstack/react-router', () => ({
-  useSearch: () => ({ consultationType: 'REPEATED' }),
+  useSearch: () => ({ consultationType }),
 }));
 
 vi.mock('@/feature/multi-step-form/ui/multi-step-form-layout', () => ({
@@ -45,9 +46,19 @@ vi.mock('@/widgets/consultation-appointments-steps/ui/confirm-appointment-step',
 
 describe('ConsultationAppointment', () => {
   it('skips target step for repeated consultations', () => {
+    consultationType = 'REPEATED';
     render(<ConsultationAppointment />);
 
     expect(screen.queryByTestId('choose-target')).toBeNull();
+    expect(screen.getByTestId('choose-slot')).toBeInTheDocument();
+    expect(screen.getByTestId('confirm')).toBeInTheDocument();
+  });
+
+  it('shows target step for default consultations', () => {
+    consultationType = 'DEFAULT';
+    render(<ConsultationAppointment />);
+
+    expect(screen.getByTestId('choose-target')).toBeInTheDocument();
     expect(screen.getByTestId('choose-slot')).toBeInTheDocument();
     expect(screen.getByTestId('confirm')).toBeInTheDocument();
   });

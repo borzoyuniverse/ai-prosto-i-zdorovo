@@ -11,6 +11,9 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/components/back-button/back-button', () => ({
   BackButton: () => <div data-testid="back-button" /> ,
 }));
+vi.mock('@/lib/shadcn/components/ui/spinner/spinner', () => ({
+  Spinner: () => <div data-testid="spinner" />,
+}));
 
 
 vi.mock('@tanstack/react-router', () => ({
@@ -46,5 +49,37 @@ describe('SelectConsultationType', () => {
     render(<SelectConsultationType />);
 
     expect(screen.getByText('Type A')).toBeInTheDocument();
+  });
+
+  it('renders empty state when there are no types', () => {
+    const useGetAppointmentTypesMock = vi.mocked(useGetAppointmentTypes);
+
+    useGetAppointmentTypesMock.mockReturnValue({
+      data: { consultationTypes: [] },
+      isError: false,
+      error: null,
+      isPending: false,
+    } as any);
+
+    render(<SelectConsultationType />);
+
+    expect(
+      screen.getByText('select-consultation-type-page.empty.title'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders spinner while loading', () => {
+    const useGetAppointmentTypesMock = vi.mocked(useGetAppointmentTypes);
+
+    useGetAppointmentTypesMock.mockReturnValue({
+      data: { consultationTypes: [] },
+      isError: false,
+      error: null,
+      isPending: true,
+    } as any);
+
+    render(<SelectConsultationType />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

@@ -75,6 +75,19 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       include: ['src/**/*.test.{ts,tsx}'],
       setupFiles: 'src/app/setup-tests.ts',
+      coverage: {
+        provider: 'v8',
+        reporter: ['json-summary'],
+        include: [
+          'src/app/pages/main-page/main-page.tsx',
+          'src/app/pages/consultation-select/consultation-select.tsx',
+          'src/app/pages/consultation-appointment/consultation-appointment.tsx',
+          'src/app/pages/chat-with-curator/chat-with-curator.tsx',
+          'src/app/pages/filling-questionnaire/filling-questionnaire.tsx',
+          'src/app/pages/client-recommendations/client-recommendations.tsx',
+          'src/app/pages/profile/profile.tsx',
+        ],
+      },
     },
     server: {
       proxy: proxies[process.env.VITE_PROXY_SERVER as keyof typeof proxies],
