@@ -1,5 +1,7 @@
-# WORKPLAN — single source of truth for FP
-stage: discovery
+﻿# WORKPLAN - single source of truth for FP
+# ID format: FP###, unique and sequential across this file.
+# Tech: backend uses Spring Boot + Kotlin (see docs/REQUIREMENTS.md, docs/QNA_DECISIONS.md)
+stage: tests-red
 
 defaults:
   coverage_thresholds:
@@ -7,19 +9,103 @@ defaults:
     front: { lines: 0.80, functions: 0.70, branches: 0.65, statements: 0.80 }
 
 feature_packs:
-  - id: FP000
-    title: Template Feature Pack
-    goal: <describe the goal>
+  - id: FP001
+    title: Client MVP [MVP]
+    goal: Client registration, booking flow, questionnaires, recommendations, notifications.
     priority: 1
+    status: tests-red
+    scope:
+      ctas: [CTA-003, CTA-004, CTA-005, CTA-006, CTA-008, CTA-019, CTA-020]
+      pages:
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/main-page/main-page.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-select/consultation-select.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/consultation-appointment/consultation-appointment.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/chat-with-curator/chat-with-curator.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/filling-questionnaire/filling-questionnaire.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/client-recommendations/client-recommendations.tsx
+        - front/handmade/proj-prosto-zdorovo-frontend-develop/src/app/pages/profile/profile.tsx
+      endpoints:
+        - RPC get-appointments
+        - RPC get-appointment-types
+        - RPC specialist-available
+        - RPC get-goals
+        - RPC free-slots
+        - RPC create-appointment
+        - RPC confirm-appointment
+        - RPC search-form
+        - RPC get-form-template
+        - RPC form-submission
+        - RPC get-recommendations
+        - RPC get-profile
+        - RPC get-chats
+    acceptance:
+      - FR-003; FR-004; FR-005; FR-006; FR-008; FR-026
+    risks: []
+    blockers: []
+    spikes: []
+    tests_phase: code   # null | spec | code
+    artifacts:
+      required:
+        - test-logs
+        - coverage-json-summary
+        - demo-notes
+        - links.md
+    ack:
+      by: "Stakeholder"
+      at: "2026-01-08T18:10:00+03:00"
+      scope: "FP001:tests-red:spec"
+    reflection: "????? FP001 ????????. Back e2e: 404 Not Found ?? RPC ?????????? (????????). Front vitest: 2 ??????? (MainPage ?? ???????? get-recommendations; ChatWithCurator ?? ???????? get-chats). ????: artifacts/FP001/2026-01-08/logs/back-tests.log, artifacts/FP001/2026-01-08/logs/front-tests.log."
+    gate_decision: null
+    gate_return_mode: null
+
+  - id: FP002
+    title: Specialist MVP [vNext]
+    goal: Specialist authentication, schedule management, chat, questionnaires, recommendations.
+    priority: 2
     status: discovery
     scope:
-      ctas: [CTA-000]
+      ctas: [CTA-011, CTA-012, CTA-013, CTA-014, CTA-015]
       pages:
-        - front/src/App.tsx
+        - TBD
       endpoints:
-        - GET /health
+        - POST /auth/login
+        - GET /specialists/{specialistId}/schedule
+        - PUT /specialists/{specialistId}/schedule
+        - GET /chats
+        - GET /specialists/{specialistId}/clients/{clientId}/questionnaire
+        - POST /specialists/{specialistId}/recommendations
     acceptance:
-      - FR-001; UAT-001; INT-001; UNIT-001
+      - FR-011; FR-012; FR-013; FR-014; FR-015; FR-021
+    risks: []
+    blockers: []
+    spikes: []
+    tests_phase: null   # null | spec | code
+    artifacts:
+      required:
+        - test-logs
+        - coverage-json-summary
+        - demo-notes
+        - links.md
+    ack: null
+    reflection: null
+    gate_decision: null
+    gate_return_mode: null
+
+  - id: FP003
+    title: Curator/Admin MVP [vNext]
+    goal: Curator authentication, access to chats, and schedules; role-based access control.
+    priority: 3
+    status: discovery
+    scope:
+      ctas: [CTA-016, CTA-017, CTA-018]
+      pages:
+        - TBD
+      endpoints:
+        - POST /auth/login
+        - GET /curator/chats
+        - GET /curator/schedules
+    acceptance:
+      - FR-016; FR-017; FR-018; FR-019
     risks: []
     blockers: []
     spikes: []

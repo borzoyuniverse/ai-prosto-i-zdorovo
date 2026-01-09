@@ -1,17 +1,128 @@
-# QNA & DECISIONS
+﻿# QNA & DECISIONS
 
 ## Open Questions / Gaps
-- [YYYY-MM-DD] [FP000] Q: <question> Owner: <role>. Status: open
+Нумерация:
+- Формат: [FP###-Q##] для вопросов и [FP###-A##] для ответов.
+- Нумерация сквозная по документу: Q01, Q02, Q03...
+- Вопрос соответствует конкретному FP; если относится ко всем, используем [ALL].
+- Ответ использует тот же номер, что и соответствующий вопрос.
+- При добавлении вопроса обязательно создается шаблон ответа с тем же номером, с заполненным By и Status.
+
+- [2026-01-08] [FP001-Q01] Q: Какие конкретные поля требуются при регистрации клиента (полис, ФИО, дата рождения, пол) и где хранится пароль? Owner: Product. Status: closed
+- [2026-01-08] [FP002-Q02] Q: Какой провайдер используется для SMS и Email верификации? Owner: Tech. Status: closed
+- [2026-01-08] [FP003-Q03] Q: Какие страницы/React-прототипы считаются источником UI (кроме front/src/App.tsx)? Owner: Product. Status: closed
+- [2026-01-08] [FP004-Q04] Q: Нужны ли отдельные чаты по направлениям и как они создаются/закрываются? Owner: Product. Status: closed
+- [2026-01-08] [FP005-Q05] Q: Как формируется ссылка на анкету после записи и какой формат анкеты (разделы/вопросы)? Owner: Product. Status: closed
+- [2026-01-08] [FP006-Q06] Q: Какая система записи: только Google Calendar или также Яндекс.Календарь? Owner: Product. Status: closed
+- [2026-01-08] [FP007-Q07] Q: Нужны ли видео-записи и текстовые расшифровки встреч, где они хранятся? Owner: Product. Status: closed
+- [2026-01-08] [FP008-Q08] Q: Каналы уведомлений: только in-app или также WhatsApp (Wazzup), email, SMS? Owner: Product. Status: closed
+- [2026-01-08] [FP009-Q09] Q: Как специалист управляет расписанием через Google Calendar: правила слотов, длительность, буферы? Owner: Product. Status: closed
+- [2026-01-08] [FP010-Q10] Q: Формат рекомендаций и требования к хранению (текст, файлы, вложения)? Owner: Product. Status: closed
+- [2026-01-08] [FP011-Q11] Q: Как назначаются права куратора и специалиста на клиентов (матрица доступа), где это хранится? Owner: Product. Status: closed
+- [2026-01-08] [FP012-Q12] Q: Требуется ли интеграция с внешними сервисами (med.me виджет, Wazzup) в MVP или позже? Owner: Product. Status: closed
+- [2026-01-08] [FP013-Q13] Q: Как импортируются списки страховых и первичные таблицы клиентов/специалистов (формат, периодичность, владелец процесса)? Owner: Product. Status: closed
+- [2026-01-08] [FP014-Q14] Q: Как обрабатывать и хранить чувствительные данные (паспорт, полис, контакты) и кто имеет доступ? Owner: Security. Status: closed
+- [2026-01-08] [FP015-Q15] Q: Разрешено ли хранить в репозитории учетные данные/токены внешних сервисов? Owner: Security. Status: closed
+- [2026-01-08] [FP016-Q16] Q: Какие версии Spring Boot и Kotlin использовать, и какой build tool (Gradle/Maven) принять стандартом? Owner: Tech. Status: closed
+- [2026-01-08] [FP017-Q17] Q: Какие базовые зависимости Spring нужны в MVP (security, data, validation, web), чтобы не раздувать стек? Owner: Tech. Status: closed
+- [2026-01-08] [FP018-Q18] Q: Какие API нужны для страниц записи в front/handmade (типы консультаций, слоты, подтверждение)? Owner: Product. Status: closed
+- [2026-01-08] [FP001-Q19] Q: Подтвердить, что FP001 ограничен только MVP (front/handmade), vNext CTA отложены. Owner: Stakeholder. Status: closed
+- [2026-01-08] [FP001-Q20] Q: Клиентские страницы при создании должны располагаться в front/handmade. Owner: Stakeholder. Status: closed
+- [2026-01-08] [FP001-Q21] Q: В API.yaml есть упоминание Google Calendar в /specialists/{specialistId}/schedule; подтвердить Yandex и убрать упоминания Google. Owner: Stakeholder. Status: closed
+- [2026-01-08] [FP001-Q22] Q: Уточнить FR-026 (CTA-019 /profile): какие данные профиля показываем, какие ограничения по доступу/редактированию в MVP? Owner: Stakeholder. Status: closed
 
 ## Answers
-- [YYYY-MM-DD] [FP000] A: <answer>. Status: closed
+Нумерация:
+- Формат: [FP###-A##] для ответов.
+- ID ответа соответствует ID вопроса.
+- Каждый ответ содержит автора (By) и статус.
+- Для нового вопроса добавляется шаблон ответа с тем же номером.
+
+- [2026-01-08] [FP001-A01] A: Имя, фамилия, отчество, дата рождения дд-мм-гггг, электронная почта, телефон (+7xxxxxxxxxx), название страховой компании из дропдауна (пока можно подставить 4 штуки для примера как моки в БД). Все и пароль хранятся в нашей базе. Логином выступает почта, хранится все в нашей БД. By: Stakeholder. Status: closed
+- [2026-01-08] [FP002-A02] A: Верификация проходит администратором по списку от страховых компаний. Пока предполагается, чтобы администратор копировал в файл (excel на Яндекс.Диске) списки, оттуда раз в сутки с помощью скрипта копируется в базу и происходит верификация. Пример таблицы лежит в docs/raw/Таблица для новых клиентов.xlsx. By: Stakeholder. Status: closed
+- [2026-01-08] [FP003-A03] A: Фронт MVP готов, скопирован в папку front/handmade. By: Stakeholder. Status: closed
+- [2026-01-08] [FP004-A04] A: Каждый клиент общается в чате с куратором. Специалист общается с куратором. Напрямую клиент со специалистом общается только во время видеовстречи, чата напрямую с клиентом нет. By: Stakeholder. Status: closed
+- [2026-01-08] [FP005-A05] A: Пример вопросов лежит в docs/raw (опросник). By: Stakeholder. Status: closed
+- [2026-01-08] [FP006-A06] A: Яндекс.Календарь. От Google отказались. By: Stakeholder. Status: closed
+- [2026-01-08] [FP007-A07] A: Да, нужны и видео, и расшифровки, хранение на S3 (наше облако). By: Stakeholder. Status: closed
+- [2026-01-08] [FP008-A08] A: Уведомления in-app и на почту. Возможно, в будущем будут другие. By: Stakeholder. Status: closed
+- [2026-01-08] [FP009-A09] A: Для первого MVP пока просто в таблицу excel на Яндекс.Диске, оттуда скриптом раз в сутки переносится в Яндекс.Календарь куратора. By: Stakeholder. Status: closed
+- [2026-01-08] [FP010-A10] A: Специалист передает данные txt и файлы (pdf, jpg) куратору, он отправляет клиенту. By: Stakeholder. Status: closed
+- [2026-01-08] [FP011-A11] A: Аналогично файлу ЛК куратора и специалиста (в docs). By: Stakeholder. Status: closed
+- [2026-01-08] [FP012-A12] A: Wazzup - будет только ссылка, саппорт проекта без интеграции. Интеграции: Яндекс.Календарь, Яндекс.Диск, S3, сервис рассылки SMS (пока неизвестно, когда), рассылка почты (пока неизвестно, возможно минимально через свой сервер). By: Stakeholder. Status: closed
+- [2026-01-08] [FP013-A13] A: Ответ в [2026-01-08] [FP002-A02]. By: Stakeholder. Status: closed
+- [2026-01-08] [FP014-A14] A: Есть согласие и политика обработки данных, которую подтверждает клиент при регистрации (нужно хранить). Контакты видит только куратор как человек. By: Stakeholder. Status: closed
+- [2026-01-08] [FP015-A15] A: Нет. Только в .env. By: Stakeholder. Status: closed
+- [2026-01-08] [FP016-A16] A: Последние версии. Gradle. By: Stakeholder. Status: closed
+- [2026-01-08] [FP017-A17] A: Добавлять по ходу по необходимости. By: Stakeholder. Status: closed
+- [2026-01-08] [FP018-A18] A: JSON-RPC methods: get-appointment-types (consultation types list); specialist-available (canBook by consultationTypeId); get-goals (goals by consultationTypeId); free-slots (slots by consultationTypeId, date, sameSpecialist); create-appointment (consultationTypeId, goalId, slotId); confirm-appointment (appointmentId); get-appointments (userId). Endpoint baseURL: /api/webhook/json-rpc/ with method parameter and JSON-RPC 2.0 body. By: Agent. Status: closed
+- [2026-01-08] [FP001-A19] A: FP001 — только MVP; используем только страницы из front/handmade. vNext CTA отложены. By: Stakeholder. Status: closed
+- [2026-01-08] [FP001-A20] A: Клиентские страницы нужно создавать в front/handmade. By: Stakeholder. Status: closed
+- [2026-01-08] [FP001-A21] A: Провайдер календаря — Yandex; убрать упоминания Google из описаний API. By: Stakeholder. Status: closed
+- [2026-01-08] [FP001-A22] A: FR-026 (profile) = просмотр профиля клиента без редактирования. Показать: ФИО, email; телефон; дата рождения; страховая, номер полиса, срок действия; пакет консультаций (всего, использовано, осталось, validUntil). Доступ: только клиент к своему профилю. Дроуеры - просмотр, изменение не входит в MVP. By: Stakeholder. Status: closed
 
 ## ADR (short form, inline)
-- ADR-YYYY-MM-DD-01 — <title> (Proposed)
-  - Context: <why>
-  - Decision: <what>
-  - Consequences: <impact>
-  - Links: <links>
+- ADR-2026-01-08-09 - FP001 ограничен MVP front/handmade (Accepted)
+  - Context: Стейкхолдер подтвердил поставку только MVP с использованием страниц front/handmade.
+  - Decision: В FP001 входят только MVP CTA/страницы из front/handmade; vNext CTA отложены.
+  - Consequences: В scope FP001 не входят страницы регистрации/логина/уведомлений/входа в встречу.
+  - Links: docs/UX_MAP.md, docs/WORKPLAN.yaml
+- ADR-2026-01-08-10 - Синхронизировать API-документацию с Yandex Calendar (Accepted)
+  - Context: В API.yaml всё ещё упоминается Google Calendar, тогда как ADR фиксирует Yandex Calendar.
+  - Decision: Обновить описания API так, чтобы упоминался только Yandex Calendar.
+  - Consequences: Нужна чистка API-документации; поведение не меняется.
+  - Links: docs/API.yaml, docs/QNA_DECISIONS.md
+- ADR-YYYY-MM-DD-01 - <title> (Proposed)
+- ADR-2026-01-08-12 - Профиль: только просмотр в MVP (Accepted)
+  - Context: Нужна фиксация требований по профилю клиента для CTA-019; UI уже отображает данные профиля.
+  - Decision: Профиль — только просмотр. Показать: ФИО, email, телефон, дата рождения, страховая, номер полиса, срок действия, пакет консультаций (всего/использовано/осталось/validUntil). Изменение данных не входит в MVP.
+  - Consequences: АРИ/модель должны обеспечивать чтение полей профиля; редактирование отложено.
+  - Links: docs/REQUIREMENTS.md, docs/UX_MAP.md, docs/QNA_DECISIONS.md
+- ADR-2026-01-08-01 - Backend stack: Spring Boot + Kotlin (Accepted)
+  - Context: Need a fixed backend stack for MVP planning and implementation.
+  - Decision: Use Spring Boot with Kotlin for backend services.
+  - Consequences: API and implementation align with Spring/Kotlin conventions; switching stacks later requires ADR update and review.
+  - Links: docs/REQUIREMENTS.md
+- ADR-2026-01-08-02 - Client verification via insurer list import (Accepted)
+  - Context: Registration must be verified against insurer lists.
+  - Decision: Admin copies insurer lists to an Excel file on Yandex Disk; a daily script imports into DB for verification.
+  - Consequences: Requires scheduled import job and data validation; verification is not real-time.
+  - Links: docs/REQUIREMENTS.md, docs/MODEL.sql
+- ADR-2026-01-08-03 - Calendar provider: Yandex Calendar (Accepted)
+  - Context: Scheduling is required; Google Calendar was considered earlier.
+  - Decision: Use Yandex Calendar; Google Calendar is not used.
+  - Consequences: Integration scope changes to Yandex APIs; front/back references to Google must be removed.
+  - Links: docs/REQUIREMENTS.md, docs/API.yaml
+- ADR-2026-01-08-04 - Chat communication model (Accepted)
+  - Context: Define chat participants for MVP.
+  - Decision: Client chats only with curator; specialist chats only with curator; no direct client-specialist chat.
+  - Consequences: Chat UI/logic limited to curator channels; specialist-client communication only via video call.
+  - Links: docs/REQUIREMENTS.md, docs/UX_MAP.md
+- ADR-2026-01-08-05 - Video and transcript storage (Accepted)
+  - Context: Video meetings and transcripts must be retained.
+  - Decision: Store video recordings and transcripts in S3 (project cloud).
+  - Consequences: Requires media storage integration and access control.
+  - Links: docs/REQUIREMENTS.md
+- ADR-2026-01-08-06 - Notifications channels (Accepted)
+  - Context: Define MVP notification channels.
+  - Decision: Support in-app and email notifications; other channels are future.
+  - Consequences: Email provider TBD; in-app storage required.
+  - Links: docs/REQUIREMENTS.md
+- ADR-2026-01-08-07 - MVP frontend source (Accepted)
+  - Context: Identify source of MVP UI.
+  - Decision: MVP frontend is in front/handmade.
+  - Consequences: UX_MAP and WORKPLAN should reference these pages for MVP scope.
+  - Links: docs/UX_MAP.md, docs/WORKPLAN.yaml
+- ADR-2026-01-08-08 - Consent and contact visibility (Accepted)
+  - Context: Personal data processing requirements.
+  - Decision: Store consent/policy acceptance at registration; client contacts visible only to curator.
+  - Consequences: DB stores consent timestamps and access control rules.
+  - Links: docs/REQUIREMENTS.md, docs/MODEL.sql
+- ADR-2026-01-08-11 - FP001 синхронизация API и модели данных (Accepted)
+  - Context: Несовпадения полей между docs/API.yaml и docs/MODEL.sql блокируют design-ready для FP001.
+  - Decision: Синхронизировать схемы, добавив в модель клиентов insurer_name и avatar_url; в модель рекомендаций appointment_id; в модель чатов таблицу chat_participants. В API добавить insurer_id для клиента, client_id для questionnaire/notification, и привести описания расписания к Yandex Calendar.
+  - Consequences: Схемы согласованы, фронт получает нужные поля, требуется миграция БД на новые колонки и таблицу.
+  - Links: docs/API.yaml, docs/MODEL.sql, docs/UX_MAP.md, docs/WORKPLAN.yaml
 
 ## Conflicts and decisions impacting consolidated docs
 - [YYYY-MM-DD] <note>

@@ -4,8 +4,9 @@
 Цель: зафиксировать **циклический процесс по Feature Pack (FP)**, где агенты идут по «рельсам», используют существующие React-страницы как прототипы (часть с мок-данными), и на каждом этапе выполняют согласование со стейкхолдером (ACK) и короткую рефлексию.
 
 **Короткие команды для стейкхолдера** (пишите прямо в чат):  
-`FP=FP1 mode=discovery — начать`  
-`FP=FP1 mode=design-first — синхронизируй UX_MAP и решения`
+`FP=FP1 mode=extractor - собрать контекст и заполнить базовые документы`  
+`FP=FP1 mode=discovery - начать`  
+`FP=FP1 mode=design-first - синхронизируй UX_MAP и решения`
 `FP=FP1 mode=design-first — изменение UI:`  
 `FP=FP1 mode=tests-red — оформи UAT/BDD и RTM`  
 `FP=FP1 mode=implement — доведи до зелёного`  
@@ -135,6 +136,14 @@ workflow:
 5. `docs/TESTS.md` (UAT/BDD, RTM)
 
 > При несоответствии UAT vs REQUIREMENTS без ADR — **нельзя** продолжать реализацию; оформить Question→ADR.
+
+---
+
+### Mode: **extractor**
+
+**Context Bootstrap:** `examples/**`  `REQUIREMENTS.md`  `API.yaml`  `MODEL.sql`  `UX_MAP.md`  `TESTS.md`  `WORKPLAN.yaml`  `QNA_DECISIONS.md`
+**Write:** `REQUIREMENTS.md`, `API.yaml`, `MODEL.sql`, `UX_MAP.md` (CTA/FP Assignment), `TESTS.md` (Strategy), `WORKPLAN.yaml` (список FP и scope), `QNA_DECISIONS.md` (Questions/Gaps)
+**Do not edit:** код, пороги, структура документов; не создавать новые файлы/папки.
 
 ---
 
@@ -294,12 +303,14 @@ workflow:
 ## 5) Политики и запреты (anti-bypass)
 
 * **Нельзя** менять: `AGENTS.md`, coverage-пороги, workflow, структуру документов.
-* **Нельзя** редактировать `REQUIREMENTS.md` напрямую: любые изменения только через `QNA_DECISIONS.md` (Question→Answer→ADR).
+* В режиме mode=extractor **разрешено** заполнять и редактировать docs/REQUIREMENTS.md напрямую
+* **Нельзя** редактировать `REQUIREMENTS.md` напрямую: любые изменения вне extractor только через `QNA_DECISIONS.md` (Question→Answer→ADR).
 * **Нельзя** снимать моки со страниц **вне** mode `implement` и **вне** CTA/Pages, указанных в `UX_MAP.md` для данного FP.
 * **Нельзя** изменять статусы FP в `WORKPLAN.yaml` без Evidence и без **ACK**, где он требуется.
 * **Нельзя** удалять записи Questions/Gaps/ADR — только помечать «closed» с ссылкой на решение.
 * **Web/MCP** — **выключены** всегда.
 * **Нельзя** добавлять новые документы/папки (кроме артефактов) без ADR-обоснования в `QNA_DECISIONS.md`.
+* **Language**: всегда отвечать пользователю по‑русски. В документах использовать русский язык по возможности; английский допустим только для кода, идентификаторов, API/SQL и цитат из исходных спецификаций.
 
 ---
 

@@ -1,25 +1,1200 @@
 openapi: 3.0.3
 info:
-  title: App Template API
+  title: Prosto i Zdorovo API
   version: 0.1.0
+  description: Backend stack uses Spring Boot + Kotlin.
 servers:
   - url: http://localhost:3000
 paths:
+  /api/webhook/json-rpc/:
+    post:
+      summary: JSON-RPC 2.0 endpoint used by frontend
+      description: |
+        Base URL used by frontend RPC client (see front/handmade). Request is sent to
+        /api/webhook/json-rpc/?method=<method> with JSON-RPC 2.0 body.
+        Known methods (MVP):
+          - get-appointments
+          - get-appointment-types
+          - specialist-available
+          - get-goals
+          - free-slots
+          - create-appointment
+          - confirm-appointment
+          - search-form
+          - get-form-template
+          - form-submission
+          - get-recommendations
+          - get-profile
+          - get-chats
+      parameters:
+        - in: query
+          name: method
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RpcRequest"
+      responses:
+        "200":
+          description: RPC response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RpcResponse"
+
   /health:
     get:
       summary: Health check
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Health'
+                $ref: "#/components/schemas/Health"
+
+  /auth/login:
+    post:
+      summary: Client or staff login by email + password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/register:
+    post:
+      summary: Client registration by insurance policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientRegistrationRequest"
+      responses:
+        "200":
+          description: Registration initiated (verification required)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/verify-sms:
+    post:
+      summary: Verify SMS code for client registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SmsVerificationRequest"
+      responses:
+        "200":
+          description: Phone verified
+
+  /auth/verify-email:
+    post:
+      summary: Verify email code for client registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailVerificationRequest"
+      responses:
+        "200":
+          description: Email verified
+
+  /clients/{clientId}/dashboard:
+    get:
+      summary: Client dashboard (next appointment + last recommendation)
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDashboard"
+
+  /clients/{clientId}:
+    get:
+      summary: Client profile
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Client profile data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{clientId}/questionnaires:
+    get:
+      summary: List client questionnaires
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Questionnaires list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Questionnaire"
+
+  /questionnaires/{questionnaireId}/responses:
+    post:
+      summary: Submit questionnaire responses
+      parameters:
+        - in: path
+          name: questionnaireId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionnaireResponse"
+      responses:
+        "200":
+          description: Questionnaire submitted
+
+  /clients/{clientId}/recommendations:
+    get:
+      summary: List client recommendations
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Recommendations list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recommendation"
+
+  /clients/{clientId}/notifications:
+    get:
+      summary: List client notifications
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Notifications list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /chats:
+    get:
+      summary: List chats (client/specialist/curator)
+      responses:
+        "200":
+          description: Chat list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Chat"
+
+  /chats/{chatId}/messages:
+    get:
+      summary: List chat messages
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Messages list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      summary: Send chat message
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageCreateRequest"
+      responses:
+        "200":
+          description: Message sent
+
+  /appointments:
+    post:
+      summary: Book consultation with specialist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentCreateRequest"
+      responses:
+        "200":
+          description: Appointment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /appointments/{appointmentId}:
+    get:
+      summary: Get consultation details
+      parameters:
+        - in: path
+          name: appointmentId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Appointment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /specialists/{specialistId}/schedule:
+    get:
+      summary: Get specialist schedule (Yandex Calendar)
+      parameters:
+        - in: path
+          name: specialistId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Schedule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecialistSchedule"
+    put:
+      summary: Update specialist schedule (Yandex Calendar)
+      parameters:
+        - in: path
+          name: specialistId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpecialistSchedule"
+      responses:
+        "200":
+          description: Schedule updated
+
+  /specialists/{specialistId}/clients/{clientId}/questionnaire:
+    get:
+      summary: Specialist views client questionnaire
+      parameters:
+        - in: path
+          name: specialistId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Questionnaire data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Questionnaire"
+
+  /specialists/{specialistId}/recommendations:
+    post:
+      summary: Create recommendations after consultation
+      parameters:
+        - in: path
+          name: specialistId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecommendationCreateRequest"
+      responses:
+        "200":
+          description: Recommendation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recommendation"
+
+  /curator/chats:
+    get:
+      summary: Curator views all chats
+      responses:
+        "200":
+          description: Chat list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Chat"
+
+  /curator/schedules:
+    get:
+      summary: Curator views all specialists' schedules
+      responses:
+        "200":
+          description: Schedules list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SpecialistSchedule"
+
 components:
   schemas:
+    RpcRequest:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          example: "2.0"
+        method:
+          type: string
+          description: RPC method name
+        params:
+          type: object
+          description: Method params (see specific method schemas)
+        id:
+          type: string
+        skipCache:
+          type: boolean
+      required: [jsonrpc, method]
+
+    RpcResponse:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          example: "2.0"
+        id:
+          type: string
+        result:
+          type: object
+          description: Method result (see specific method schemas)
+        error:
+          $ref: "#/components/schemas/RpcError"
+
+    RpcError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+
+    GetAppointmentsRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+      required: [userId]
+
+    AppointmentSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        isRepeated:
+          type: boolean
+        consultationTypeName:
+          type: string
+        consultationTypeId:
+          type: string
+        specialistType:
+          type: string
+        unfilledQuestionnaires:
+          type: array
+          items:
+            $ref: "#/components/schemas/UnfilledQuestionnaire"
+        consultationUrl:
+          type: string
+
+    UnfilledQuestionnaire:
+      type: object
+      properties:
+        formId:
+          type: string
+        formType:
+          type: string
+
+    GetAppointmentsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/AppointmentSummary"
+
+    GetAppointmentTypesResponse:
+      type: object
+      properties:
+        consultationTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConsultationType"
+
+    ConsultationType:
+      type: object
+      properties:
+        consultationTypeId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        specialistType:
+          type: string
+        newAppointmentStatus:
+          type: string
+
+    SpecialistAvailableRequest:
+      type: object
+      properties:
+        consultationTypeId:
+          type: string
+      required: [consultationTypeId]
+
+    SpecialistAvailableResponse:
+      type: object
+      properties:
+        canBook:
+          type: boolean
+
+    GetGoalsRequest:
+      type: object
+      properties:
+        consultationTypeId:
+          type: string
+      required: [consultationTypeId]
+
+    GetGoalsResponse:
+      type: object
+      properties:
+        goals:
+          type: array
+          items:
+            $ref: "#/components/schemas/Goal"
+
+    Goal:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        formId:
+          type: string
+
+    FreeSlotsRequest:
+      type: object
+      properties:
+        consultationTypeId:
+          type: string
+        date:
+          type: string
+        sameSpecialist:
+          type: boolean
+      required: [consultationTypeId, date]
+
+    FreeSlotsResponse:
+      type: object
+      properties:
+        slots:
+          type: array
+          items:
+            $ref: "#/components/schemas/Slot"
+
+    Slot:
+      type: object
+      properties:
+        time:
+          type: string
+        slotIds:
+          type: array
+          items:
+            type: string
+
+    CreateAppointmentRequest:
+      type: object
+      properties:
+        consultationTypeId:
+          type: string
+        goalId:
+          type: string
+        slotId:
+          type: string
+      required: [consultationTypeId, goalId, slotId]
+
+    CreateAppointmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        consultationTypeId:
+          type: string
+        goalId:
+          type: string
+        slotId:
+          type: string
+        specialistId:
+          type: string
+
+    ConfirmAppointmentRequest:
+      type: object
+      properties:
+        appointmentId:
+          type: string
+      required: [appointmentId]
+
+    ConfirmAppointmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        slotId:
+          type: string
+        specialistId:
+          type: string
+
+    SearchFormRequest:
+      type: object
+      properties:
+        includeFilled:
+          type: boolean
+        includeGoal:
+          type: boolean
+        includeGeneral:
+          type: boolean
+        consultationTypeIds:
+          type: array
+          items:
+            type: string
+        clientId:
+          type: string
+
+    SearchFormResponse:
+      type: object
+      properties:
+        forms:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormSummary"
+
+    FormSummary:
+      type: object
+      properties:
+        formId:
+          type: string
+        formType:
+          type: string
+        isFilled:
+          type: boolean
+        filledAt:
+          type: string
+        title:
+          type: string
+
+    GetFormTemplateRequest:
+      type: object
+      properties:
+        id:
+          type: string
+      required: [id]
+
+    FormSchema:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        fields:
+          type: array
+          items:
+            type: object
+
+    FormSubmissionRequest:
+      type: object
+      properties:
+        formId:
+          type: string
+        answers:
+          type: object
+      required: [formId, answers]
+
+    FormSubmissionResponse:
+      type: object
+      properties:
+        answers:
+          type: object
+
+    GetRecommendationsRequest:
+      type: object
+      properties:
+        specialistTypes:
+          type: array
+          items:
+            type: string
+
+    GetRecommendationsResponse:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecommendationRpc"
+
+    RecommendationRpc:
+      type: object
+      properties:
+        id:
+          type: string
+        specialistType:
+          type: string
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+
+    Attachment:
+      type: object
+      properties:
+        key:
+          type: string
+        url:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+
+    GetProfileRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+      required: [userId]
+
+    GetProfileResponse:
+      type: object
+      properties:
+        package:
+          $ref: "#/components/schemas/ProfilePackage"
+        personalInfo:
+          $ref: "#/components/schemas/ProfilePersonalInfo"
+
+    ProfilePackage:
+      type: object
+      properties:
+        totalConsultations:
+          type: integer
+        usedConsultations:
+          type: integer
+        validUntil:
+          type: string
+
+    ProfilePersonalInfo:
+      type: object
+      properties:
+        phone:
+          type: string
+        email:
+          type: string
+        birthDate:
+          type: string
+        insurerName:
+          type: string
+        policyNumber:
+          type: string
+        policyValidUntil:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+
+    GetChatsRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+      required: [userId]
+
+    GetChatsResponse:
+      type: object
+      properties:
+        chats:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatSummary"
+
+    ChatSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        lastMessage:
+          type: string
+        unreadCount:
+          type: integer
+        lastMessageDate:
+          type: string
+          format: date-time
+
     Health:
       type: object
       properties:
         status:
           type: string
           example: ok
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+
+    ClientRegistrationRequest:
+      type: object
+      properties:
+        last_name:
+          type: string
+        first_name:
+          type: string
+        middle_name:
+          type: string
+        policy_number:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+        insurer_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        consent_accepted_at:
+          type: string
+          format: date-time
+        privacy_policy_accepted_at:
+          type: string
+          format: date-time
+      required: [last_name, first_name, policy_number, birth_date, phone, email, password, consent_accepted_at, privacy_policy_accepted_at]
+
+    SmsVerificationRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+        code:
+          type: string
+      required: [phone, code]
+
+    EmailVerificationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        code:
+          type: string
+      required: [email, code]
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user_id:
+          type: string
+        role:
+          type: string
+
+    ClientDashboard:
+      type: object
+      properties:
+        next_appointment:
+          $ref: "#/components/schemas/Appointment"
+        last_recommendation:
+          $ref: "#/components/schemas/Recommendation"
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+        insurer_id:
+          type: string
+        last_name:
+          type: string
+        first_name:
+          type: string
+        middle_name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        consent_accepted_at:
+          type: string
+          format: date-time
+        privacy_policy_accepted_at:
+          type: string
+          format: date-time
+        employer_name:
+          type: string
+        employer_position:
+          type: string
+        insurer_name:
+          type: string
+        policy_number:
+          type: string
+        policy_start_date:
+          type: string
+          format: date
+        policy_end_date:
+          type: string
+          format: date
+        program_name:
+          type: string
+        program_scope:
+          type: string
+        payment_type:
+          type: string
+        consultations_count:
+          type: integer
+        extra_conditions:
+          type: string
+        avatar_url:
+          type: string
+        status:
+          type: string
+
+    Specialist:
+      type: object
+      properties:
+        id:
+          type: string
+        last_name:
+          type: string
+        first_name:
+          type: string
+        middle_name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        birth_place:
+          type: string
+        passport_number:
+          type: string
+        passport_issued_by:
+          type: string
+        passport_issued_at:
+          type: string
+          format: date
+        passport_dept_code:
+          type: string
+        gender:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        inn:
+          type: string
+        directions:
+          type: string
+        education:
+          type: string
+        additional_education:
+          type: string
+        hired_at:
+          type: string
+          format: date
+        fired_at:
+          type: string
+          format: date
+
+    Insurer:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        inn:
+          type: string
+        ogrn:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        website:
+          type: string
+        contract_number:
+          type: string
+        contract_signed_at:
+          type: string
+          format: date
+        contract_ends_at:
+          type: string
+          format: date
+
+    AppointmentCreateRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        specialist_id:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+      required: [client_id, specialist_id, start_at]
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        specialist_id:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+
+    RecommendationCreateRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        appointment_id:
+          type: string
+        text:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecommendationFile"
+      required: [client_id, text]
+
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        specialist_id:
+          type: string
+        appointment_id:
+          type: string
+        text:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecommendationFile"
+        created_at:
+          type: string
+          format: date-time
+
+    RecommendationFile:
+      type: object
+      properties:
+        file_name:
+          type: string
+        file_type:
+          type: string
+        file_url:
+          type: string
+
+    Questionnaire:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+
+    QuestionnaireResponse:
+      type: object
+      properties:
+        answers:
+          type: object
+      required: [answers]
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        event:
+          type: string
+        send_at:
+          type: string
+        channel:
+          type: string
+        message:
+          type: string
+
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        participants:
+          type: array
+          items:
+            type: string
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        chat_id:
+          type: string
+        sender_id:
+          type: string
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    MessageCreateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+      required: [text]
+
+    SpecialistSchedule:
+      type: object
+      properties:
+        specialist_id:
+          type: string
+        calendar_provider:
+          type: string
+          description: Yandex Calendar
+        calendar_id:
+          type: string
+          description: TODO (external calendar identifier)
+        slots:
+          type: array
+          items:
+            type: string
+          description: TODO (time slots format)
